@@ -1,0 +1,6 @@
+Revision history for PDF-Tags-Reader
+
+{{$NEXT}}
+
+0.0.1  2021-12-22T11:12:34+13:00
+    - Initial version; factored out from PDF::Tags 0.0.11

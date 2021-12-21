@@ -1,49 +1,30 @@
-[[Raku PDF Project]](https://pdf-raku.github.io)
- / [PDF::Tags::Reader](https://pdf-raku.github.io/PDF-Tags-Reader-raku)
+==head2 Synopsis
 
+    use PDF::Class;
+    use PDF::Tags::Reader;
+    # read tags
+    my PDF::Class $pdf .= open: "t/pdf/tagged.pdf");
+    my PDF::Tags::Reader $tags .= read: :$pdf;
+    my PDF::Tags::Elem $doc = $tags[0];
+    say "document root {$doc.name}";
+    say " - child {.name}" for $doc.kids;
 
-PDF-Tags-Reader-raku
-=============
+Methods
+-------
 
-The Raku module extends [PDF::Tags](https://pdf-raku.github.io/PDF-Tags-raku/PDF/Tags),
-adding the ability to read structured content from tagged PDF files.
+This class inherits from [PDF::Tags](PDF::Tags) and has its methods available.
 
-Synopsis
---------
+### method read
 
-```
-use PDF::API6;
-use PDF::Tags::Reader;
-use PDF::Tags::Elem;
+    method read(PDF::Class :$pdf!, Bool :$create) returns PDF::Tags
 
-my PDF::API6 $pdf .= open: "t/pdf/tagged.pdf";
-my PDF::Tags::Reader $tags .= read: :$pdf;
-my PDF::Tags::Elem $root = $tags[0];
-say $root.name; # Document
+Read tagged PDF structure from an existing file that has been previously tagged.
 
-# DOM traversal
-for $root.kids {
-    say .name; # L, P, H1, P ...
-}
+The `:create` option creates a new struct-tree root, if one does not already exist.
 
-# XPath navigation
-my @tags = $root.find('Document/L/LI[1]/LBody//*')>>.name;
-say @tags.join(','); # Reference,P,Code
+### method canvas-tags
 
-# XML Serialization
-say $root.xml;
+    method canvas-tags(PDF::Content::Canvas) returns Hash
 
-```
-
-Some, but not all PDF files have PDF tagging.  The `pdf-info.raku` script
-(PDF::Class module) can be used to verify this:
-```
-% pdf-info.raku my.pdf |grep Tagged
-Tagged:       yes
-```
-
-Scripts in this Distribution
-------
-
-##### `pdf-tag-dump.raku --select=XPath --omit=tag --password=Xxxx --max-depth=n --marks --graphics --/atts --/style --debug t/pdf/tagged.pdf`
+Renders a canvas object (Page or XObject form) and caches marked content as a hash of [PDF::Content::Tag](PDF::Content::Tag) objects, indexed by `MCID` (Marked Content ID).
 
