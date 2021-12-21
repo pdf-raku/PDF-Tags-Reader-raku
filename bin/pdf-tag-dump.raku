@@ -4,6 +4,7 @@ use v6;
 use PDF::Class;
 use PDF::Catalog;
 use PDF::StructTreeRoot;
+use PDF::Tags::Reader;
 use PDF::Tags::XML-Writer;
 use PDF::Tags::Node :TagName;
 use PDF::IO;
@@ -31,7 +32,7 @@ sub MAIN(Str $infile,               #= input PDF
     );
 
     my PDF::Class $pdf .= open( $input, :$password );
-    my PDF::Tags $dom .= read: :$pdf, :$strict, :$graphics, :$marks;
+    my PDF::Tags::Reader $dom .= read: :$pdf, :$strict, :$graphics, :$marks;
     my PDF::Tags::XML-Writer $xml .= new: :$max-depth, :$atts, :$debug, :$omit, :$style, :$root-tag, :$marks;
 
     my PDF::Tags::Node @nodes = do with $select {
