@@ -35,6 +35,13 @@ say $root.xml;
 
 ```
 
+Some, but not all PDF files have PDF tagging.  The `pdf-info.raku` script
+(PDF::Class module) can be used to verify this:
+```
+% pdf-info.raku my.pdf |grep Tagged
+Tagged:       yes
+```
+
 Scripts in this Distribution
 ------
 
