@@ -86,37 +86,34 @@ class TextDecoder {
     method SetFont($,$?) is also<SetGraphicsState> {
         $!font = $_ with $*gfx.font-face;
     }
-    method ShowText($text-encoded) {
+    method !save-text($text) {
         with $*gfx.open-tags.tail -> $tag {
             self!set-graphics-attributes: $tag, $*gfx
                 if $!graphics;
-            my $text = $.current-font.decode($text-encoded, :str);
             $tag.children.push: $text;
         }
         else {
-            warn $.current-font.decode($text-encoded, :str);
+            note "untagged text: {$text}";
         }
     }
-    method ShowSpaceText(List $text) {
-        with $*gfx.open-tags.tail -> $tag {
-            self!set-graphics-attributes: $tag, $*gfx
-                if $!graphics;
-            my Str $last := ' ';
-            my @chunks = $text.map: {
-                when Str {
-                    $last := $.current-font.decode($_, :str);
-                }
-                when $_ <= -120 && !($last ~~ /\s$/) {
-                    # assume implicit space
-                    ' '
-                }
-                default { Empty }
+    method ShowText($_) {
+        my $text = $.current-font.decode($_, :str);
+        self!save-text: $text;
+    }
+    method ShowSpaceText(List $_) {
+        my Str $last := ' ';
+        my @chunks = .map: {
+            when Str {
+                $last := $.current-font.decode($_, :str);
             }
-            $tag.children.push: @chunks.join;
+            when $_ <= -120 && !($last ~~ /\s$/) {
+                # assume implicit space
+                ' '
+            }
+            default { Empty }
         }
-        else {
-            warn $text.raku;
-        }
+
+        self!save-text: @chunks.join;
     }
     method Do($key) {
         warn "todo Do $key";
