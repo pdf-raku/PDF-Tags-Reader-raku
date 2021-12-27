@@ -88,9 +88,16 @@ class TextDecoder {
     }
     method !save-text($text) {
         with $*gfx.open-tags.tail -> $tag {
-            self!set-graphics-attributes: $tag, $*gfx
-                if $!graphics;
-            $tag.children.push: $text;
+##            self!set-graphics-attributes: $tag, $*gfx
+##                if $!graphics;
+            given $tag.children {
+                if .tail ~~ Str:D {
+                    .tail ~= $text;
+                }
+                else {
+                    $tag.children.push: $text;
+                }
+            }
         }
         else {
             note "untagged text: {$text}";
@@ -115,6 +122,9 @@ class TextDecoder {
 
         self!save-text: @chunks.join;
     }
+    method TextNextLine(|) is also<TextMoveSet MoveShowText MoveSetShowText> {
+        self!save-text: "\n";
+    }
     method Do($key) {
         warn "todo Do $key";
     }
@@ -134,7 +144,7 @@ method canvas-tags($obj --> Hash) {
 
 =begin pod
 
-==head2 Synopsis
+=head2 Synopsis
 
   use PDF::Class;
   use PDF::Tags::Reader;
@@ -144,10 +154,15 @@ method canvas-tags($obj --> Hash) {
   my PDF::Tags::Elem $doc = $tags[0];
   say "document root {$doc.name}";
   say " - child {.name}" for $doc.kids;
+  say $doc.xml; # dump tags and text content as XML
+
+=head2 Description
+
+This module implements reading of tagged PDF content from PDF files.
 
 =head2 Methods
 
-This class inherits from L<PDF::Tags> and has its methods available.
+This class inherits from L<PDF::Tags|(https://pdf-raku.github.io/PDF-Tags-raku/> and has its methods available.
 
  =head3 method read
 

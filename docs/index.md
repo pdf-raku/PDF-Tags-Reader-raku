@@ -1,4 +1,5 @@
-==head2 Synopsis
+Synopsis
+--------
 
     use PDF::Class;
     use PDF::Tags::Reader;
@@ -8,11 +9,17 @@
     my PDF::Tags::Elem $doc = $tags[0];
     say "document root {$doc.name}";
     say " - child {.name}" for $doc.kids;
+    say $doc.xml; # dump tags and text content as XML
+
+Description
+-----------
+
+This module implements reading of tagged PDF content from PDF files.
 
 Methods
 -------
 
-This class inherits from [PDF::Tags](PDF::Tags) and has its methods available.
+This class inherits from [PDF::Tags]((https://pdf-raku.github.io/PDF-Tags-raku/) and has its methods available.
 
 ### method read
 
