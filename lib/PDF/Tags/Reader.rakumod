@@ -1,6 +1,6 @@
 use PDF::Tags;
 
-unit class PDF::Tags::Reader:ver<0.0.1>
+unit class PDF::Tags::Reader:ver<0.0.2>
     is PDF::Tags;
 
 use PDF::Font::Loader::FontObj;
@@ -162,7 +162,7 @@ This module implements reading of tagged PDF content from PDF files.
 
 =head2 Methods
 
-This class inherits from L<PDF::Tags|(https://pdf-raku.github.io/PDF-Tags-raku/> and has its methods available.
+This class inherits from L<PDF::Tags|https://pdf-raku.github.io/PDF-Tags-raku/> and has its methods available.
 
  =head3 method read
 

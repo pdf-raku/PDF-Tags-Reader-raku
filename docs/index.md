@@ -19,7 +19,7 @@ This module implements reading of tagged PDF content from PDF files.
 Methods
 -------
 
-This class inherits from [PDF::Tags]((https://pdf-raku.github.io/PDF-Tags-raku/) and has its methods available.
+This class inherits from [PDF::Tags](https://pdf-raku.github.io/PDF-Tags-raku/) and has its methods available.
 
 ### method read
 
