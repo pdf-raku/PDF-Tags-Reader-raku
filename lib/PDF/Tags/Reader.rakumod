@@ -39,6 +39,7 @@ class TextDecoder {
             unless $!font.font-obj ~~ PDF::Content::FontObj:D;
         $!font.font-obj;
     }
+    has Numeric $ty;
 
     method callback {
         sub ($op, *@args) {
@@ -103,11 +104,14 @@ class TextDecoder {
             note "untagged text: {$text}";
         }
     }
+    method !set-ty { $!ty = .[5] / .[3] given $*gfx.TextMatrix; }
     method ShowText($_) {
+        self!set-ty;
         my $text = $.current-font.decode($_, :str);
         self!save-text: $text;
     }
     method ShowSpaceText(List $_) {
+        self!set-ty;
         my Str $last := ' ';
         my @chunks = .map: {
             when Str {
@@ -122,8 +126,19 @@ class TextDecoder {
 
         self!save-text: @chunks.join;
     }
-    method TextNextLine(|) is also<TextMove TextMoveSet MoveShowText MoveSetShowText> {
+    method TextNextLine(|) is also<TextMoveSet MoveShowText MoveSetShowText> {
+        # treat these as explict newlines
         self!save-text: "\n";
+    }
+    method TextMove($x, $y) {
+        # treat a significant vertical shift from the
+        # last text positioning as an explict newline
+        my $old-ty = $!ty;
+        my $new-ty = self!set-ty;
+        with $old-ty {
+            self!save-text: "\n"
+                unless -.3 <= ($_ - $new-ty) <= .3;
+        }
     }
     method Do($key) {
         warn "todo Do $key";
