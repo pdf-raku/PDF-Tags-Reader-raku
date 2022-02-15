@@ -122,7 +122,7 @@ class TextDecoder {
 
         self!save-text: @chunks.join;
     }
-    method TextNextLine(|) is also<TextMoveSet MoveShowText MoveSetShowText> {
+    method TextNextLine(|) is also<TextMove TextMoveSet MoveShowText MoveSetShowText> {
         self!save-text: "\n";
     }
     method Do($key) {

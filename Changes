@@ -1,6 +1,7 @@
 Revision history for PDF-Tags-Reader
 
 {{$NEXT}}
+    - Fixed dropping of some new-lines
 
 0.0.2  2021-12-28T06:45:07+13:00
     - Adjust tests for PDF::Tags 0.0.13, which no longer inserts extra Span tags.

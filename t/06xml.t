@@ -21,6 +21,6 @@ is-deeply $dom.root.xml(:root-tag<Docs>).lines.head(6), (
     '    <L ListNumbering="Disc">',
     '      <LI>');
 
-is $dom.root[0][0][0][1][0].xml.trim, '<Reference><Link TextDecorationType="Underline">NAME </Link></Reference>';
+is $dom.root[0][0][0][1][0].xml.trim, qq{<Reference>\n  <Link TextDecorationType="Underline">\n    \nNAME \n  </Link>\n</Reference>};
 
 done-testing;

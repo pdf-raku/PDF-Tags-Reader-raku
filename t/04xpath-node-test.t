@@ -21,9 +21,9 @@ is names($dom.find('Document/H1[1]/*/node()')), '#text';
 is names($dom.find('Document/H1[1]/*/text()')), '#text';
 my $e = $dom[0][2];
 is $e.name, 'H1';
-is $e.text, 'NAME ';
-is $dom.first('Document/H1/*').text(), 'NAME ';
-is $dom.first('Document/H1/*/text()').text(), 'NAME ';
+is $e.text, "\nNAME ";
+is $dom.first('Document/H1/*').text(), "\nNAME ";
+is $dom.first('Document/H1/*/text()').text(), "\nNAME ";
 
 my $link = $dom.first('Document/L[1]/LI[1]/LBody/Reference/Link');
 is names([$link]), 'Link';
