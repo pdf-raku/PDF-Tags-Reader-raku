@@ -1,11 +1,12 @@
 Revision history for PDF-Tags-Reader
 
 {{$NEXT}}
+
+0.0.3  2022-02-23T11:38:07+13:00
     - Add detection of implicit newlines for Td (TextMove) when
       significant vertical displacement is detected. This is needed
-      to work with Cairo/PDF, which makes significant use of this
-      operator for line positioning. Also improves the XML generation
-      from the PDF Specification in PDF::ISO_32000.
+      to work with Cairo/PDF, which doesn't have newlines or wrapping.
+      Also improves XML generation from the PDF Specification in PDF::ISO_32000.
 
 0.0.2  2021-12-28T06:45:07+13:00
     - Adjust tests for PDF::Tags 0.0.13, which no longer inserts extra Span tags.
