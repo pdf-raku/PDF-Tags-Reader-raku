@@ -13,8 +13,7 @@ use PDF::Content::Matrix :&is-identity;
 use PDF::Class;
 
 has Bool $.strict = True;
-has Bool $.graphics;
-has Bool $.marks = $!graphics;
+has Bool $.marks;
 
 method read(PDF::Class:D :$pdf!, Bool :$create, |c --> PDF::Tags:D) {
     with $pdf.catalog.StructTreeRoot -> $cos {
@@ -32,7 +31,6 @@ class TextDecoder {
     use Method::Also;
     has Hash @!save;
     has PDF::Content::Font $!font;
-    has $.graphics;
     has $.current-font;
     method current-font {
         PDF::Font::Loader.load-font: :dict($!font)
@@ -58,39 +56,11 @@ class TextDecoder {
             }
         }
     }
-    method !set-graphics-attributes($tag, $gfx) {
-        if $tag.defined {
-            given $gfx.CTM {
-                $tag.attributes<gm> = .join: ','
-                     unless .&is-identity();
-            }
-            given $gfx.StrokeColor {
-                unless .key ~~ 'DeviceGray' && .value[0] =~= 0 {
-                    $tag.attributes<stroke> = (.key.subst(/^Device/, ''), .value).join: ',';
-                }
-            }
-            given $gfx.FillColor {
-                unless .key ~~ 'DeviceGray' && .value[0] =~= 0 {
-                    $tag.attributes<fill> = (.key.subst(/^Device/, ''), .value).join: ',';
-                }
-            }
-
-            if $gfx.context == GraphicsContext::Text {
-                given $gfx.TextMatrix {
-                    unless .&is-identity() {
-                        $tag.attributes<tm> = .join: ',';
-                    }
-                }
-            }
-        }
-    }
     method SetFont($,$?) is also<SetGraphicsState> {
         $!font = $_ with $*gfx.font-face;
     }
     method !save-text($text) {
         with $*gfx.open-tags.tail -> $tag {
-##            self!set-graphics-attributes: $tag, $*gfx
-##                if $!graphics;
             given $tag.children {
                 if .tail ~~ Str:D {
                     .tail ~= $text;
@@ -150,7 +120,7 @@ has Tags %!canvas-tags{PDF::Content::Canvas};
 method canvas-tags($obj --> Hash) {
     %!canvas-tags{$obj} //= do {
         $*ERR.print: '.';
-        my &callback = TextDecoder.new(:$!graphics).callback;
+        my &callback = TextDecoder.new.callback;
         my $gfx = $obj.gfx: :&callback, :$!strict;
         $obj.render;
         my PDF::Content::Tag % = $gfx.tags.grep(*.mcid.defined).map: {.mcid => $_ };
@@ -194,5 +164,24 @@ The `:create` option creates a new struct-tree root, if one does not already exi
 Renders a canvas object (Page or XObject form) and caches
 marked content as a hash of L<PDF::Content::Tag> objects,
 indexed by `MCID` (Marked Content ID).
+
+=head2 Scripts in this Distribution
+
+=head3 `pdf-tag-dump.raku`
+
+=code pdf-tag-dump.raku --select=<xpath-expr> --omit=tag --password=Xxxx --max-depth=n --marks --/atts --/style --debug t/pdf/tagged.pdf
+
+Options:
+
+ =item `--password=****` -  password for the input PDF, if encrypted with a user password
+ =item `--max-depth=n` - depth to ascend/descend struct tree
+ =item `--/atts` disable tags attributes
+ =item `--debug` - write extra debugging information to XML
+ =item `--marks` - descend into marked content
+ =item `--strict` - warn about unknown tags, etc
+ =item `--/style` - omit stylesheet
+ =item `--select=xpath-expr` - twigs to include (relative to root)
+
+This script reads tagged PDF content from PDF files as XML.
 
 =end pod

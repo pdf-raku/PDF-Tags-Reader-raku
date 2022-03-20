@@ -16,10 +16,9 @@ sub MAIN(Str $infile,               #= input PDF
          Number  :$max-depth = 16,  #= depth to ascend/descend struct tree
          Bool    :$atts = True,     #= include attributes in tags
          Bool    :$debug,           #= write extra debugging information
-         Bool    :$graphics,        #= dump graphics state
-         Bool    :$marks = $graphics,           #= descend into marked content
+         Bool    :$marks,           #= descend into marked content
          Bool    :$strict = True,   #= warn about unknown tags, etc
-         Bool    :$style = True,    #= include stylesheet
+         Bool    :$style = True,    #= include stylesheet header
          Str     :$select,          #= XPath of twigs to include (relative to root)
          TagName :$omit,            #= Tags to omit from output
          TagName :$root-tag,        #= Outer root tag name
@@ -32,7 +31,7 @@ sub MAIN(Str $infile,               #= input PDF
     );
 
     my PDF::Class $pdf .= open( $input, :$password );
-    my PDF::Tags::Reader $dom .= read: :$pdf, :$strict, :$graphics, :$marks;
+    my PDF::Tags::Reader $dom .= read: :$pdf, :$strict, :$marks;
     my PDF::Tags::XML-Writer $xml .= new: :$max-depth, :$atts, :$debug, :$omit, :$style, :$root-tag, :$marks;
 
     my PDF::Tags::Node @nodes = do with $select {

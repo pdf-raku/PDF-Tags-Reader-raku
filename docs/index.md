@@ -35,3 +35,30 @@ The `:create` option creates a new struct-tree root, if one does not already exi
 
 Renders a canvas object (Page or XObject form) and caches marked content as a hash of [PDF::Content::Tag](PDF::Content::Tag) objects, indexed by `MCID` (Marked Content ID).
 
+Scripts in this Distribution
+----------------------------
+
+### `pdf-tag-dump.raku`
+
+    pdf-tag-dump.raku --select=<xpath-expr> --omit=tag --password=Xxxx --max-depth=n --marks --/atts --/style --debug t/pdf/tagged.pdf
+
+Options:
+
+  * `--password=****` - password for the input PDF, if encrypted with a user password
+
+  * `--max-depth=n` - depth to ascend/descend struct tree
+
+  * `--/atts` disable tags attributes
+
+  * `--debug` - write extra debugging information to XML
+
+  * `--marks` - descend into marked content
+
+  * `--strict` - warn about unknown tags, etc
+
+  * `--/style` - omit stylesheet
+
+  * `--select=xpath-expr` - twigs to include (relative to root)
+
+This script reads tagged PDF content from PDF files as XML.
+
