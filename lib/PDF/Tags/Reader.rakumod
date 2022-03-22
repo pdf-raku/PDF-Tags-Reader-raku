@@ -10,6 +10,7 @@ use PDF::Content::Font;
 use PDF::Content::FontObj;
 use PDF::Content::Ops :GraphicsContext;
 use PDF::Content::Matrix :&is-identity;
+use PDF::Content::Tag :InlineElemTags;
 use PDF::Class;
 
 has Bool $.strict = True;
@@ -32,12 +33,16 @@ class TextDecoder {
     has Hash @!save;
     has PDF::Content::Font $!font;
     has $.current-font;
+    has Numeric $.font-size = 10;
+    has PDF::Content::Tag $.mark;
+    has Int  $!skip;
+    has Numeric $!ty;
+
     method current-font {
         PDF::Font::Loader.load-font: :dict($!font)
             unless $!font.font-obj ~~ PDF::Content::FontObj:D;
         $!font.font-obj;
     }
-    has Numeric $ty;
 
     method callback {
         sub ($op, *@args) {
@@ -46,21 +51,42 @@ class TextDecoder {
                 if self.can($method);
         }
     }
+    method BeginMarkedContent($,$?) is also<BeginMarkedContentDict> {
+        given $*gfx.tags.open-tags.tail -> $tag {
+            $!skip++ if $tag.name eq Artifact;
+            $!mark = $tag if $tag.mcid;
+        }
+    }
+    method EndMarkedContent() {
+        with $*gfx.tags.closed-tag -> $tag {
+            $!skip-- if $tag.name eq Artifact;
+            with $!mark {
+                $_ = Nil if $_ === $tag;
+            }
+        }
+    }
     method Save()      {
-        @!save.push: %( :$!font );
+        @!save.push: %( :$!font, :$!font-size );
     }
     method Restore()   {
         if @!save {
             given @!save.pop {
                 $!font = .<font>;
+                $!font-size = .<font-size>;
             }
         }
     }
-    method SetFont($,$?) is also<SetGraphicsState> {
+    method SetFont($, $!font-size) {
         $!font = $_ with $*gfx.font-face;
     }
+    method SetGraphicsState($gs) {
+        if $gs<Font>:exists {
+            $!font = $*gfx.font-face;
+            $!font-size = $*gfx.font-size;
+        }
+    }
     method !save-text($text) {
-        with $*gfx.open-tags.tail -> $tag {
+        with $!mark // $*gfx.open-tags.tail -> $tag {
             given $tag.children {
                 if .tail ~~ Str:D {
                     .tail ~= $text;
@@ -76,42 +102,52 @@ class TextDecoder {
     }
     method !set-ty { $!ty = .[5] / .[3] given $*gfx.TextMatrix; }
     method ShowText($_) {
-        self!set-ty;
-        my $text = $.current-font.decode($_, :str);
-        self!save-text: $text;
+        unless $!skip {
+            self!set-ty;
+            my $text = $.current-font.decode($_, :str);
+            self!save-text: $text;
+        }
     }
     method ShowSpaceText(List $_) {
-        self!set-ty;
-        my Str $last := ' ';
-        my @chunks = .map: {
-            when Str {
-                $last := $.current-font.decode($_, :str);
+        unless $!skip {
+            self!set-ty;
+            my Str $last := ' ';
+            my @chunks = .map: {
+                when Str {
+                    $last := $.current-font.decode($_, :str);
+                }
+                when $_ <= -120 && !($last ~~ /\s$/) {
+                    # assume implicit space
+                    ' '
+                }
+                default { Empty }
             }
-            when $_ <= -120 && !($last ~~ /\s$/) {
-                # assume implicit space
-                ' '
-            }
-            default { Empty }
-        }
 
-        self!save-text: @chunks.join;
+            self!save-text: @chunks.join;
+        }
     }
     method TextNextLine(|) is also<TextMoveSet MoveShowText MoveSetShowText> {
         # treat these as explict newlines
-        self!save-text: "\n";
+        unless $!skip {
+            self!save-text: "\n";
+        }
     }
     method TextMove($x, $y) {
         # treat a significant vertical shift from the
         # last text positioning as an explict newline
-        my $old-ty = $!ty;
-        my $new-ty = self!set-ty;
-        with $old-ty {
-            self!save-text: "\n"
-                unless -.3 <= ($_ - $new-ty) <= .3;
+        unless $!skip {
+            my $old-ty = $!ty;
+            my $new-ty = self!set-ty;
+            with $old-ty {
+                my $leading = ($_ - $new-ty) / $!font-size;
+                self!save-text: "\n"
+                    unless -.3 <= $leading <= .3;
+            }
         }
     }
     method Do($key) {
-        warn "todo Do $key";
+        warn "todo Do $key"
+            unless $!skip;
     }
 }
 constant Tags = Hash[PDF::Content::Tag];
