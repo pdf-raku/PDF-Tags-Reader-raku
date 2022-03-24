@@ -35,7 +35,7 @@ class TextDecoder {
     has $.current-font;
     has Numeric $.font-size = 10;
     has PDF::Content::Tag $.mark;
-    has Int  $!skip;
+    has Int $!artifact;
     has Numeric $!ty;
 
     method current-font {
@@ -53,13 +53,13 @@ class TextDecoder {
     }
     method BeginMarkedContent($,$?) is also<BeginMarkedContentDict> {
         given $*gfx.tags.open-tags.tail -> $tag {
-            $!skip++ if $tag.name eq Artifact;
+            $!artifact++ if $tag.name eq Artifact;
             $!mark = $tag if $tag.mcid;
         }
     }
     method EndMarkedContent() {
         with $*gfx.tags.closed-tag -> $tag {
-            $!skip-- if $tag.name eq Artifact;
+            $!artifact-- if $tag.name eq Artifact;
             with $!mark {
                 $_ = Nil if $_ === $tag;
             }
@@ -102,14 +102,14 @@ class TextDecoder {
     }
     method !set-ty { $!ty = .[5] / .[3] given $*gfx.TextMatrix; }
     method ShowText($_) {
-        unless $!skip {
+        unless $!artifact {
             self!set-ty;
             my $text = $.current-font.decode($_, :str);
             self!save-text: $text;
         }
     }
     method ShowSpaceText(List $_) {
-        unless $!skip {
+        unless $!artifact {
             self!set-ty;
             my Str $last := ' ';
             my @chunks = .map: {
@@ -128,14 +128,14 @@ class TextDecoder {
     }
     method TextNextLine(|) is also<TextMoveSet MoveShowText MoveSetShowText> {
         # treat these as explict newlines
-        unless $!skip {
+        unless $!artifact {
             self!save-text: "\n";
         }
     }
     method TextMove($x, $y) {
         # treat a significant vertical shift from the
         # last text positioning as an explict newline
-        unless $!skip {
+        unless $!artifact {
             my $old-ty = $!ty;
             my $new-ty = self!set-ty;
             with $old-ty {
@@ -147,7 +147,7 @@ class TextDecoder {
     }
     method Do($key) {
         warn "todo Do $key"
-            unless $!skip;
+            unless $!artifact;
     }
 }
 constant Tags = Hash[PDF::Content::Tag];
