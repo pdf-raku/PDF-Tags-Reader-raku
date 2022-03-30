@@ -3,13 +3,11 @@ use PDF::Tags;
 unit class PDF::Tags::Reader:ver<0.0.4>
     is PDF::Tags;
 
-use PDF::Font::Loader::FontObj;
 use PDF::Font::Loader;
 use PDF::Content::Canvas;
 use PDF::Content::Font;
 use PDF::Content::FontObj;
 use PDF::Content::Ops :GraphicsContext;
-use PDF::Content::Matrix :&is-identity;
 use PDF::Content::Tag :InlineElemTags;
 use PDF::Class;
 
