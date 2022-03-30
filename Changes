@@ -2,6 +2,8 @@ Revision history for PDF-Tags-Reader
 
 {{$NEXT}}
     - Handle nested tags within marked content. Skip artifacts.
+    - Adjust tests for PDF::Tags 0.1.0+, which no longer treats
+      /O (owner) as an attribute
 
 0.0.3  2022-02-23T11:38:07+13:00
     - Add detection of implicit newlines for Td (TextMove) when
