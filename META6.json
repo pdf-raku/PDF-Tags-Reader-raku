@@ -6,7 +6,7 @@
   "build-depends": [
   ],
   "depends": [
-    "PDF::Tags:ver<0.0.14+>",
+    "PDF::Tags:ver<0.1.2+>",
     "PDF::Font::Loader:ver<0.5.12+>",
     "Method::Also"
   ],

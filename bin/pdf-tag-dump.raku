@@ -19,6 +19,8 @@ sub MAIN(Str $infile,               #= input PDF
          Bool    :$marks,           #= descend into marked content
          Bool    :$strict = True,   #= warn about unknown tags, etc
          Bool    :$style = True,    #= include stylesheet header
+         Str     :$dtd,             #= extern DtD to use
+         Bool    :$valid = True,    #= include external DtD declaration
          Str     :$select,          #= XPath of twigs to include (relative to root)
          TagName :$omit,            #= Tags to omit from output
          TagName :$root-tag,        #= Outer root tag name
@@ -29,10 +31,11 @@ sub MAIN(Str $infile,               #= input PDF
            ?? $*IN.slurp-rest( :bin ) # sequential access
            !! $infile.IO              # random access
     );
+    my %o = :$dtd with $dtd;
 
     my PDF::Class $pdf .= open( $input, :$password );
     my PDF::Tags::Reader $dom .= read: :$pdf, :$strict, :$marks;
-    my PDF::Tags::XML-Writer $xml .= new: :$max-depth, :$atts, :$debug, :$omit, :$style, :$root-tag, :$marks;
+    my PDF::Tags::XML-Writer $xml .= new: :$max-depth, :$atts, :$debug, :$omit, :$style, :$root-tag, :$marks, :$valid, |%o;
 
     my PDF::Tags::Node @nodes = do with $select {
         $dom.find($_);
@@ -69,6 +72,7 @@ Options:
    --root-tag=tag-name define outer root tag
    --marks             decend into marked content
    --debug             add debugging to output
+   --valid             add external DtD declaration
    --/atts             omit attributes in tags
    --/strict           suppress warnings
    --/style            omit root stylesheet link
