@@ -13,6 +13,7 @@ use PDF::Class;
 
 has Bool $.strict = True;
 has Bool $.marks;
+has Lock:D $.lock .= new;
 
 method read(PDF::Class:D :$pdf!, Bool :$create, |c --> PDF::Tags:D) {
     with $pdf.catalog.StructTreeRoot -> $cos {
@@ -30,16 +31,20 @@ class TextDecoder {
     use Method::Also;
     has Hash @!save;
     has PDF::Content::Font $!font;
+    has PDF::Content::FontObj $!font-obj;
     has $.current-font;
     has Numeric $.font-size = 10;
     has PDF::Content::Tag $.mark;
     has Int $!artifact;
     has Numeric $!ty;
+    has Lock:D $.lock .= new;
 
     method current-font {
-        PDF::Font::Loader.load-font: :dict($!font)
-            unless $!font.font-obj ~~ PDF::Content::FontObj:D;
-        $!font.font-obj;
+        $!font-obj //= $!lock.protect: {
+            PDF::Font::Loader.load-font: :dict($!font)
+                unless $!font.font-obj ~~ PDF::Content::FontObj:D;
+            $!font.font-obj;
+        }
     }
 
     method callback {
@@ -64,21 +69,24 @@ class TextDecoder {
         }
     }
     method Save()      {
-        @!save.push: %( :$!font, :$!font-size );
+        @!save.push: %( :$!font, :$!font-size, :$!font-obj );
     }
     method Restore()   {
         if @!save {
             given @!save.pop {
                 $!font = .<font>;
+                $!font-obj = .<font-obj>;
                 $!font-size = .<font-size>;
             }
         }
     }
     method SetFont($, $!font-size) {
+        $!font-obj = Nil;
         $!font = $_ with $*gfx.font-face;
     }
     method SetGraphicsState($gs) {
         if $gs<Font>:exists {
+            $!font-obj = Nil;
             $!font = $*gfx.font-face;
             $!font-size = $*gfx.font-size;
         }
@@ -154,7 +162,7 @@ has Tags %!canvas-tags{PDF::Content::Canvas};
 method canvas-tags($obj --> Hash) {
     %!canvas-tags{$obj} //= do {
         $*ERR.print: '.';
-        my &callback = TextDecoder.new.callback;
+        my &callback = TextDecoder.new(:$!lock).callback;
         my $gfx = $obj.gfx: :&callback, :$!strict;
         $obj.render;
         my PDF::Content::Tag % = $gfx.tags.grep(*.mcid.defined).map: {.mcid => $_ };
