@@ -8,7 +8,8 @@ use PDF::Content::Canvas;
 use PDF::Content::Font;
 use PDF::Content::FontObj;
 use PDF::Content::Ops :GraphicsContext;
-use PDF::Content::Tag :InlineElemTags;
+use PDF::Content::Tag :ContentTags,
+:InlineElemTags; # old location of Artifact
 use PDF::Class;
 
 has Bool $.strict = True;
@@ -57,7 +58,7 @@ class TextDecoder {
     method BeginMarkedContent($,$?) is also<BeginMarkedContentDict> {
         given $*gfx.tags.open-tags.tail -> $tag {
             $!artifact++ if $tag.name eq Artifact;
-            $!mark = $tag if $tag.mcid;
+            $!mark = $tag with $tag.mcid;
         }
     }
     method EndMarkedContent() {
@@ -159,13 +160,25 @@ class TextDecoder {
 constant Tags = Hash[PDF::Content::Tag];
 has Tags %!canvas-tags{PDF::Content::Canvas};
 
+sub build-tag-index(%tags, PDF::Content::Tag $tag) {
+    with $tag.mcid {
+        %tags{$_} = $tag;
+    }
+    else {
+        build-tag-index(%tags, $_)
+            for $tag.children;
+    }
+}
+
 method canvas-tags($obj --> Hash) {
     %!canvas-tags{$obj} //= do {
         $*ERR.print: '.';
         my &callback = TextDecoder.new(:$!lock).callback;
         my $gfx = $obj.gfx: :&callback, :$!strict;
         $obj.render;
-        my PDF::Content::Tag % = $gfx.tags.grep(*.mcid.defined).map: {.mcid => $_ };
+        my PDF::Content::Tag %tags;
+        build-tag-index(%tags, $_) for $gfx.tags.children;
+        %tags;
     }
 }
 
