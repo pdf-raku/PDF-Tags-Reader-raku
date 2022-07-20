@@ -2,6 +2,10 @@ Revision history for PDF-Tags-Reader
 
 {{$NEXT}}
 
+0.0.6  2022-07-20T14:30:03+12:00
+   - Fix reading of nested marked content in content stream; added
+     tests t/nested.t
+
 0.0.5  2022-05-29T11:06:07+12:00
     - Fix t/06xml.t test by omitting PDF::Tags 0.1.2 DOCTYPE declaration
 
