@@ -20,7 +20,7 @@ sub MAIN(Str $infile,               #= input PDF
          Bool    :$strict = True,   #= warn about unknown tags, etc
          Bool    :$style = True,    #= include stylesheet header
          Str     :$dtd,             #= extern DtD to use
-         Bool    :$valid = True,    #= include external DtD declaration
+         Bool    :$valid = !$marks, #= include external DtD declaration
          Str     :$select,          #= XPath of twigs to include (relative to root)
          TagName :$omit,            #= Tags to omit from output
          TagName :$root-tag,        #= Outer root tag name
