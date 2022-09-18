@@ -65,17 +65,17 @@ sub MAIN(Str $infile,               #= input PDF
 pdf-dom-dump.raku [options] file.pdf
 
 Options:
-   --password          password for an encrypted PDF
-   --max-depth=n       maximum tag-depth to descend
-   --select=XPath      nodes to be included
-   --omit=tag-name     nodes to be excluded
-   --root-tag=tag-name define outer root tag
-   --marks             decend into marked content
-   --debug             add debugging to output
-   --valid             add external DtD declaration
-   --/atts             omit attributes in tags
-   --/strict           suppress warnings
-   --/style            omit root stylesheet link
+   --password        password for an encrypted PDF
+   --max-depth=n     maximum tag-depth to descend
+   --select=XPath    nodes to be included
+   --omit=tag-name   nodes to be excluded
+   --root=tag-name   define outer root tag
+   --marks           descend into marked content
+   --debug           add debugging to output
+   --valid           add external DtD declaration
+   --/atts           omit attributes in tags
+   --/strict         suppress warnings
+   --/style          omit root stylesheet link
 
 =head1 DESCRIPTION
 
@@ -96,7 +96,10 @@ Raku module to be installed on your system.
 
 =head1 BUGS AND LIMITATIONS
 
-=item 
+=item Error - `tagged PDF has multiple top-level tags; no :root-tag given`
+
+This error occur on PDF files that do not contain multple top level tags and does not result in a well-formed XML document. It can be corrected by using the `--root-tag` option to define a top-level tag, or using `--select` to trim
+the tree, for example `--select=Document[1]`.
 
 =head1 TODO
 

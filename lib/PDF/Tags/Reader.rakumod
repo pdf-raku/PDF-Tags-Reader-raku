@@ -5,6 +5,7 @@ unit class PDF::Tags::Reader:ver<0.0.6>
 
 use PDF::Font::Loader;
 use PDF::Content::Canvas;
+use PDF::Content;
 use PDF::Content::Font;
 use PDF::Content::FontObj;
 use PDF::Content::Ops :GraphicsContext;
@@ -170,12 +171,12 @@ sub build-tag-index(%tags, PDF::Content::Tag $tag) {
     }
 }
 
-method canvas-tags($obj --> Hash) {
-    %!canvas-tags{$obj} //= do {
+method canvas-tags($canvas --> Hash) {
+    %!canvas-tags{$canvas} //= do {
         $*ERR.print: '.';
         my &callback = TextDecoder.new(:$!lock).callback;
-        my $gfx = $obj.gfx: :&callback, :$!strict;
-        $obj.render;
+        my PDF::Content $gfx = $canvas.gfx: :&callback, :$!strict;
+        $canvas.render;
         my PDF::Content::Tag %tags;
         build-tag-index(%tags, $_) for $gfx.tags.children;
         %tags;
@@ -240,6 +241,9 @@ Options:
  =item `--strict` - warn about unknown tags, etc
  =item `--/style` - omit stylesheet
  =item `--select=xpath-expr` - twigs to include (relative to root)
+ =item `--valid` - include external DtD link
+ =item `--omit=tag` - filter tag from output
+ =item `--root=tag` - add outer root tag
 
 This script reads tagged PDF content from PDF files as XML.
 

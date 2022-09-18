@@ -42,7 +42,7 @@ Scripts in this Distribution
 
 ### `pdf-tag-dump.raku`
 
-    pdf-tag-dump.raku --select=<xpath-expr> --omit=tag --password=Xxxx --max-depth=n --marks --/atts --/style --debug t/pdf/tagged.pdf
+    pdf-tag-dump.raku --select=<xpath-expr> --omit=tag --password=Xxxx --max-depth=n --marks --/atts --/style --debug --strict --/style --select=expr --/valid --root=tag t/pdf/tagged.pdf
 
 Options:
 
@@ -61,6 +61,12 @@ Options:
   * `--/style` - omit stylesheet
 
   * `--select=xpath-expr` - twigs to include (relative to root)
+
+  * `--/valid` - omit external DtD link
+
+  * `--omit=tag` - filter tag from output
+
+  * `--root=tag` - add outer root tag
 
 This script reads tagged PDF content from PDF files as XML.
 
