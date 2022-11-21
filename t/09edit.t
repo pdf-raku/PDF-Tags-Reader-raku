@@ -5,7 +5,7 @@ use PDF::Content::Tag :InlineElemTags;
 
 plan 7;
 
-my PDF::Class $pdf .= open("t/pdf/tagged.pdf");
+my PDF::Class $pdf .= open: "t/pdf/tagged.pdf";
 my PDF::Tags::Reader $dom .= read: :$pdf, :marks;
 
 # 7th paragraph is actually a code block

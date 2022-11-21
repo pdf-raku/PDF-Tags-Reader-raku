@@ -5,7 +5,7 @@ use PDF::Tags::XML-Writer;
 
 plan 3;
 
-my PDF::Class $pdf .= open("t/pdf/tagged.pdf");
+my PDF::Class $pdf .= open: "t/pdf/tagged.pdf";
 my PDF::Tags::Reader $dom .= read: :$pdf;
 
 is-deeply $dom.root[0].xml.lines.head(3), (

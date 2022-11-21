@@ -38,6 +38,7 @@ class TextDecoder {
     has Numeric $.font-size = 10;
     has PDF::Content::Tag $.mark;
     has Int $!artifact;
+    has Int $!reversed-chars;
     has Numeric $!ty;
     has Lock:D $.lock .= new;
 
@@ -59,12 +60,14 @@ class TextDecoder {
     method BeginMarkedContent($,$?) is also<BeginMarkedContentDict> {
         given $*gfx.tags.open-tags.tail -> $tag {
             $!artifact++ if $tag.name eq Artifact;
+            $!reversed-chars++ if $tag.name eq ReversedChars;
             $!mark = $tag with $tag.mcid;
         }
     }
     method EndMarkedContent() {
         with $*gfx.tags.closed-tag -> $tag {
             $!artifact-- if $tag.name eq Artifact;
+            $!reversed-chars-- if $tag.name eq ReversedChars;
             with $!mark {
                 $_ = Nil if $_ === $tag;
             }
@@ -93,8 +96,9 @@ class TextDecoder {
             $!font-size = $*gfx.font-size;
         }
     }
-    method !save-text($text) {
+    method !save-text($text is copy) {
         with $!mark // $*gfx.open-tags.tail -> $tag {
+            $text .= flip if $!reversed-chars;
             given $tag.children {
                 if .tail ~~ Str:D {
                     .tail ~= $text;
