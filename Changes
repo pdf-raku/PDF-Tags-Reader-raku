@@ -2,6 +2,10 @@ Revision history for PDF-Tags-Reader
 
 {{$NEXT}}
 
+0.0.7  2022-11-25T07:29:21+13:00
+   - Handle /ReversedChars content tags, which usually indicate right-to-left
+     text.
+
 0.0.6  2022-07-20T14:30:03+12:00
    - Fix reading of nested marked content in content stream; added
      tests t/nested.t

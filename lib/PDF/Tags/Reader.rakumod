@@ -1,6 +1,6 @@
 use PDF::Tags;
 
-unit class PDF::Tags::Reader:ver<0.0.6>
+unit class PDF::Tags::Reader:ver<0.0.7>
     is PDF::Tags;
 
 use PDF::Font::Loader;
