@@ -23,12 +23,12 @@ with $dom.first('Document/L[1]') {
      # layout attribute, user-property
      .set-attribute('UserProperties:Foo', "Hi"); 
      # layout attribute, misc
-     .set-attribute('Bar:Baz', 42); 
+     .set-attribute('User:Baz', 42);
 
      is .attributes<BorderThickness>, 1;
      is .attributes<Layout:BorderStyle>, 'Dotted';
      is .attributes<UserProperties:Foo>, "Hi";
-     is .attributes<Bar:Baz>, 42;
+     is .attributes<User:Baz>, 42;
 }
 
 $pdf.id =  $*PROGRAM-NAME.fmt('%-16.16s');

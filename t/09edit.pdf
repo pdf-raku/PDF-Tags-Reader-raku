@@ -4606,7 +4606,7 @@ endobj
 <<
   /Type /StructElem
   /S /L
-  /A [ << /ListNumbering /Disc /O /List >> 0 << /BorderStyle (Dotted) /BorderThickness 1 /O /Layout >> 0 << /O /UserProperties /P [ << /N (Foo) /V (Hi) >> ] >> 0 << /Baz 42 /O /Bar >> 0 ]
+  /A [ << /ListNumbering /Disc /O /List >> 0 << /BorderStyle /Dotted /BorderThickness 1 /O /Layout >> 0 << /O /UserProperties /P [ << /N (Foo) /V (Hi) >> ] >> 0 << /Baz 42 /O /User >> 0 ]
   /K [ 55 0 R 60 0 R 65 0 R 76 0 R 81 0 R ]
   /P 53 0 R
 >>
