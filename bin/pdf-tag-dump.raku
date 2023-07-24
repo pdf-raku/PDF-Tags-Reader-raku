@@ -11,15 +11,17 @@ use PDF::IO;
 
 subset Number of Int where * > 0;
 
-sub MAIN(Str $infile,               #= input PDF
-	 Str     :$password = '',   #= password for the input PDF, if encrypted
-         Number  :$max-depth = 16,  #= depth to ascend/descend struct tree
-         Bool    :$atts = True,     #= include attributes in tags
+sub MAIN(Str $infile,               #= Input PDF
+	 Str     :$password = '',   #= Password for the input PDF, if encrypted
+         Number  :$max-depth = 16,  #= Depth to ascend/descend struct tree
+         Bool    :$atts = True,     #= Include attributes in tags
+         Bool    :$roles,           #= Apply role-map
          Bool    :$debug,           #= write extra debugging information
-         Bool    :$marks,           #= descend into marked content
-         Bool    :$strict = True,   #= warn about unknown tags, etc
-         Bool    :$style = True,    #= include stylesheet header
-         Str     :$dtd,             #= extern DtD to use
+         Bool    :$marks,           #= Descend into marked content
+         Bool    :$fields = True,   #= Include referenced field data
+         Bool    :$strict = True,   #= Warn about unknown tags, etc
+         Bool    :$style = True,    #= Include stylesheet header
+         Str     :$dtd,             #= Extern DtD to use
          Bool    :$valid = !$marks, #= include external DtD declaration
          Str     :$select,          #= XPath of twigs to include (relative to root)
          TagName :$omit,            #= Tags to omit from output
@@ -35,7 +37,7 @@ sub MAIN(Str $infile,               #= input PDF
 
     my PDF::Class $pdf .= open( $input, :$password );
     my PDF::Tags::Reader $dom .= read: :$pdf, :$strict, :$marks;
-    my PDF::Tags::XML-Writer $xml .= new: :$max-depth, :$atts, :$debug, :$omit, :$style, :$root-tag, :$marks, :$valid, |%o;
+    my PDF::Tags::XML-Writer $xml .= new: :$max-depth, :$atts, :$debug, :$omit, :$style, :$root-tag, :$marks, :$valid, :$roles, |%o;
 
     my PDF::Tags::Node @nodes = do with $select {
         $dom.find($_);
@@ -70,6 +72,8 @@ Options:
    --select=XPath    nodes to be included
    --omit=tag-name   nodes to be excluded
    --root=tag-name   define outer root tag
+   --roles           apply role-map
+   --/fields         disable field values
    --marks           descend into marked content
    --debug           add debugging to output
    --valid           add external DtD declaration
@@ -103,6 +107,6 @@ the tree, for example `--select=Document[1]`.
 
 =head1 TODO
 
-=item processing of links and fields
+=item processing of links
 
 =end pod

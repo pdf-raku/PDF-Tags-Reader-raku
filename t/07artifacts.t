@@ -47,7 +47,7 @@ $pdf.id =  $*PROGRAM-NAME.fmt('%-16.16s');
 $pdf.save-as: "t/07artifacts.pdf", :!info;
 
 $pdf .= open: "t/07artifacts.pdf";
-$tags = PDF::Tags::Reader.read: :$pdf;
+$tags = PDF::Tags::Reader.read: :$pdf, :quiet;
 
 is $tags[0].xml, $xml, 'XML, round-tripped';
 

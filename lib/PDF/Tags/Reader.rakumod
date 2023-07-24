@@ -1,9 +1,10 @@
-use PDF::Tags;
+unit class PDF::Tags::Reader:ver<0.0.7>;
 
-unit class PDF::Tags::Reader:ver<0.0.7>
-    is PDF::Tags;
+use PDF::Tags;
+also is PDF::Tags;
 
 use PDF::Font::Loader;
+use PDF::Font::Loader::Dict;
 use PDF::Content::Canvas;
 use PDF::Content;
 use PDF::Content::Font;
@@ -14,12 +15,13 @@ use PDF::Content::Tag :ContentTags,
 use PDF::Class;
 
 has Bool $.strict = True;
+has Bool $.quiet;
 has Bool $.marks;
 has Lock:D $.lock .= new;
 
 method read(PDF::Class:D :$pdf!, Bool :$create, |c --> PDF::Tags:D) {
     with $pdf.catalog.StructTreeRoot -> $cos {
-        self.new: :$cos, :root(self.WHAT), |c;
+        self.new: :$cos, :root(self.WHAT), :$pdf, |c;
     }
     else {
         $create
@@ -41,11 +43,14 @@ class TextDecoder {
     has Int $!reversed-chars;
     has Numeric $!ty;
     has Lock:D $.lock .= new;
+    has Bool $.quiet;
 
     method current-font {
         $!font-obj //= $!lock.protect: {
-            PDF::Font::Loader.load-font: :dict($!font)
-                unless $!font.font-obj ~~ PDF::Content::FontObj:D;
+            unless $!font.font-obj ~~ PDF::Content::FontObj:D {
+                my Bool $core-font = PDF::Font::Loader::Dict.is-core-font: :dict($!font);
+                PDF::Font::Loader.load-font: :dict($!font), :$core-font, :$!quiet;
+            }
             $!font.font-obj;
         }
     }
@@ -178,7 +183,7 @@ sub build-tag-index(%tags, PDF::Content::Tag $tag) {
 method canvas-tags($canvas --> Hash) {
     %!canvas-tags{$canvas} //= do {
         $*ERR.print: '.';
-        my &callback = TextDecoder.new(:$!lock).callback;
+        my &callback = TextDecoder.new(:$!lock, :$!quiet).callback;
         my PDF::Content $gfx = $canvas.gfx: :&callback, :$!strict;
         $canvas.render;
         my PDF::Content::Tag %tags;
