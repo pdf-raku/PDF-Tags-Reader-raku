@@ -2,6 +2,11 @@ Revision history for PDF-Tags-Reader
 
 {{$NEXT}}
 
+0.0.8  2023-07-25T14:48:47+12:00
+   - Add -roles option to pdf-tag-dump.raku
+   - Add :core-font option to PDF::Font::Loader.load-font - allow loading
+     of core fonts.
+
 0.0.7  2022-11-25T07:29:21+13:00
    - Handle /ReversedChars content tags, which usually indicate right-to-left
      text.
