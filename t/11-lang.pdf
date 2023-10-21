@@ -1,0 +1,95 @@
+%PDF-1.3
+%¥±ë¼
+1 0 obj
+<<
+  /Type /Catalog
+  /MarkInfo << /Marked true >>
+  /Pages 2 0 R
+  /StructTreeRoot 6 0 R
+>>
+endobj
+
+2 0 obj
+<< /Type /Pages /Count 1 /Kids [ 3 0 R ] >>
+endobj
+
+3 0 obj
+<<
+  /Type /Page
+  /Contents 4 0 R
+  /MediaBox [ 0 0 612 792 ]
+  /Parent 2 0 R
+  /Resources << /Font << /F1 5 0 R >> >>
+  /StructParents 0
+>>
+endobj
+
+4 0 obj
+<< /Length 268 >> stream
+q
+  /P << /MCID 0 >> BDC
+    BT
+      1 0 0 1 20 600 Tm
+      /F1 16 Tf
+      (structure tagged english.) Tj
+      17.6 TL
+      T*
+    ET
+  EMC
+  /P << /Lang (en) /MCID 1 >> BDC
+    BT
+      1 0 0 1 20 580 Tm
+      (content tagged english.) Tj
+      T*
+    ET
+  EMC
+Q
+endstream
+endobj
+
+5 0 obj
+<<
+  /Type /Font
+  /Subtype /Type1
+  /BaseFont /Courier
+  /Encoding /WinAnsiEncoding
+>>
+endobj
+
+6 0 obj
+<<
+  /Type /StructTreeRoot
+  /K [ 7 0 R ]
+  /ParentTree << /Nums [ 0 [ 8 0 R 9 0 R ] ] >>
+>>
+endobj
+
+7 0 obj
+<< /Type /StructElem /S /Document /K [ 8 0 R 9 0 R ] /P 6 0 R >>
+endobj
+
+8 0 obj
+<< /Type /StructElem /S /P /K [ 0 ] /Lang (en) /P 7 0 R /Pg 3 0 R >>
+endobj
+
+9 0 obj
+<< /Type /StructElem /S /P /K [ 1 ] /P 7 0 R /Pg 3 0 R >>
+endobj
+
+xref
+0 10
+0000000000 65535 f 
+0000000015 00000 n 
+0000000124 00000 n 
+0000000184 00000 n 
+0000000342 00000 n 
+0000000662 00000 n 
+0000000766 00000 n 
+0000000875 00000 n 
+0000000956 00000 n 
+0000001041 00000 n 
+trailer
+<< /ID [ (t/11-lang.t     ) (t/11-lang.t     ) ] /Root 1 0 R /Size 10 >>
+startxref
+1115
+%%EOF
