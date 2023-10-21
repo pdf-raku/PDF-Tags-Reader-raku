@@ -16,8 +16,8 @@
   "name": "PDF::Tags::Reader",
   "perl": "6.*",
   "provides": {
-      "PDF::Tags::Reader": "lib/PDF/Tags/Reader.rakumod",
-      "PDF::Tags::Reader::TextDecoder": "lib/PDF/Tags/Reader/TextDecoder.rakumod"
+    "PDF::Tags::Reader": "lib/PDF/Tags/Reader.rakumod",
+    "PDF::Tags::Reader::TextDecoder": "lib/PDF/Tags/Reader/TextDecoder.rakumod"
   },
   "resources": [
   ],
@@ -28,5 +28,5 @@
   ],
   "test-depends": [
   ],
-  "version": "0.0.8"
+  "version": "0.0.9"
 }

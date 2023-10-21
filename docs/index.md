@@ -4,7 +4,7 @@ Synopsis
     use PDF::Class;
     use PDF::Tags::Reader;
     # read tags
-    my PDF::Class $pdf .= open: "t/pdf/tagged.pdf";
+    my PDF::Class $pdf .= open: "t/pdf/tagged.pdf");
     my PDF::Tags::Reader $tags .= read: :$pdf;
     my PDF::Tags::Elem $doc = $tags[0];
     say "document root {$doc.name}";
