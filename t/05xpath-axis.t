@@ -3,7 +3,7 @@ use PDF::Tags::Reader;
 use PDF::Tags::Elem;
 use PDF::Class;
 
-plan 19;
+plan 20;
 
 sub names(@elems) {
     @elems>>.name.join(' ');
@@ -11,7 +11,7 @@ sub names(@elems) {
 
 my PDF::Class $pdf .= open("t/pdf/tagged.pdf");
 
-my PDF::Tags::Reader $dom .= read: :$pdf;
+my PDF::Tags::Reader $dom .= read: :$pdf, :quiet;
 
 is names($dom.find('Document/L')), ['L', 'L'], "child, repeated";
 is names($dom.find('Document/L[1]/LI[1]/LBody/ancestor::*')), 'Document L LI', 'ancestor';
@@ -30,6 +30,7 @@ my $lbody = $li.first('LBody');
 is names($lbl.find('following-sibling::*')), 'LBody', 'following-sibling';
 is names($lbody.find('/Document/L[1]/LI[1]/LBody/preceding::*')), 'Lbl', 'preceding';
 is names($lbody.find('preceding-sibling::*')), ['Lbl'], 'preceding-sibling';
+is names($lbody.find('preceding-sibling::Lbl')), ['Lbl'], 'preceding-sibling';
 is names($lbody.find('self::*')), ['LBody'], 'self';
 is names($lbody.find('.')), ['LBody'], 'self (abbreviated)';
 is names($lbody.find('parent::*')), ['LI'], 'parent';

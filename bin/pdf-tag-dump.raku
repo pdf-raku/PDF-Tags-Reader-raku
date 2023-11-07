@@ -20,6 +20,7 @@ sub MAIN(Str $infile,               #= Input PDF
          Bool    :$marks,           #= Descend into marked content
          Bool    :$fields = True,   #= Include referenced field data
          Bool    :$strict = True,   #= Warn about unknown tags, etc
+         Bool    :$quiet,           #= avoid printing any messages to stderr
          Bool    :$style = True,    #= Include stylesheet header
          Str     :$dtd,             #= Extern DtD to use
          Bool    :$valid = !$marks && !$roles, #= include external DtD declaration
@@ -36,7 +37,7 @@ sub MAIN(Str $infile,               #= Input PDF
     my %o = :$dtd with $dtd;
 
     my PDF::Class $pdf .= open( $input, :$password );
-    my PDF::Tags::Reader $dom .= read: :$pdf, :$strict, :$marks;
+    my PDF::Tags::Reader $dom .= read: :$pdf, :$strict, :$marks, :$quiet;
     my PDF::Tags::XML-Writer $xml .= new: :$max-depth, :$atts, :$debug, :$omit, :$style, :$root-tag, :$marks, :$valid, :$roles, |%o;
 
     my PDF::Tags::Node @nodes = do with $select {
@@ -79,6 +80,7 @@ Options:
    --valid           add external DtD declaration
    --/atts           omit attributes in tags
    --/strict         suppress warnings
+   --quiet           avoid printing messages
    --/style          omit root stylesheet link
 
 =head1 DESCRIPTION

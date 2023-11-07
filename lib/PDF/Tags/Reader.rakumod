@@ -42,7 +42,7 @@ sub build-tag-index(%tags, PDF::Content::Tag $tag) {
 
 method canvas-tags($canvas --> Hash) {
     %!canvas-tags{$canvas} //= do {
-        $*ERR.print: '.';
+        $*ERR.print: '.' unless $!quiet;
         my &callback = TextDecoder.new(:$!lock, :$!quiet).callback;
         my PDF::Content $gfx = $canvas.gfx: :&callback, :$!strict;
         $canvas.render;
