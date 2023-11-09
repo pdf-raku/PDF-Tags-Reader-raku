@@ -52,7 +52,7 @@ sub MAIN(Str $infile,               #= Input PDF
     with $root-tag {
         unless @nodes[0] ~~ PDF::Tags:D {
             say '<' ~ $_ ~ '>';
-            print ' ' if @nodes;
+            print '  ' if @nodes;
             $depth++;
         }
     }
