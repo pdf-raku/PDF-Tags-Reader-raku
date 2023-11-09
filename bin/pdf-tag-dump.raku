@@ -26,7 +26,7 @@ sub MAIN(Str $infile,               #= Input PDF
          Bool    :$valid = !$marks && !$roles, #= include external DtD declaration
          Str     :$select,          #= XPath of twigs to include (relative to root)
          TagName :$omit,            #= Tags to omit from output
-         TagName :$root-tag,        #= Outer root tag name
+         TagName :$root-tag = $select ?? 'DocumentFragment' !! Str,        #= Outer root tag name
         ) {
 
     my PDF::IO $input .= coerce(
@@ -38,7 +38,7 @@ sub MAIN(Str $infile,               #= Input PDF
 
     my PDF::Class $pdf .= open( $input, :$password );
     my PDF::Tags::Reader $dom .= read: :$pdf, :$strict, :$marks, :$quiet;
-    my PDF::Tags::XML-Writer $xml .= new: :$max-depth, :$atts, :$debug, :$omit, :$style, :$root-tag, :$marks, :$valid, :$roles, |%o;
+    my PDF::Tags::XML-Writer $xml .= new: :$max-depth, :$atts, :$debug, :$omit, :$style, :$marks, :$valid, :$roles, |%o;
 
     my PDF::Tags::Node @nodes = do with $select {
         $dom.find($_);
@@ -52,6 +52,7 @@ sub MAIN(Str $infile,               #= Input PDF
     with $root-tag {
         unless @nodes[0] ~~ PDF::Tags:D {
             say '<' ~ $_ ~ '>';
+            print ' ' if @nodes;
             $depth++;
         }
     }
