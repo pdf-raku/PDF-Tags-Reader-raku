@@ -26,7 +26,7 @@ sub MAIN(Str $infile,               #= Input PDF
          Bool    :$valid = !$marks && !$roles, #= include external DtD declaration
          Str     :$select,          #= XPath of twigs to include (relative to root)
          TagName :$omit,            #= Tags to omit from output
-         TagName :$root-tag = $select ?? 'DocumentFragment' !! Str,  #= Outer root tag name
+         TagName :$root = $select ?? 'DocumentFragment' !! Str,  #= Outer root tag name
         ) {
 
     my PDF::IO $input .= coerce(
@@ -49,7 +49,7 @@ sub MAIN(Str $infile,               #= Input PDF
 
     my UInt $depth = 0;
 
-    with $root-tag {
+    with $root {
         unless @nodes[0] ~~ PDF::Tags:D {
             say '<' ~ $_ ~ '>';
             print '  ' if @nodes;
@@ -59,7 +59,7 @@ sub MAIN(Str $infile,               #= Input PDF
 
     $xml.say($*OUT, $_, :$depth) for @nodes;
 
-    say '</' ~ $root-tag ~ '>' if $depth;
+    say '</' ~ $root ~ '>' if $depth;
 }
 
 =begin pod
