@@ -1,4 +1,4 @@
-unit class PDF::Tags::Reader:ver<0.0.10>;
+unit class PDF::Tags::Reader:ver<0.0.11>;
 
 use PDF::Tags;
 also is PDF::Tags;

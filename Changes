@@ -2,6 +2,11 @@ Revision history for PDF-Tags-Reader
 
 {{$NEXT}}
 
+0.0.11  2023-11-10T10:07:43+13:00
+   - Also rename pdf-tag-dump.raku --root-tag option to --root, as
+     documented.
+   - Other documentation and README fixes.
+
 0.0.10  2023-11-10T08:25:32+13:00
    pdf-tag-dump.raku:
    - Added --quiet option
