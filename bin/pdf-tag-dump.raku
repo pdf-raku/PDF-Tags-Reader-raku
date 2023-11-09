@@ -26,7 +26,7 @@ sub MAIN(Str $infile,               #= Input PDF
          Bool    :$valid = !$marks && !$roles, #= include external DtD declaration
          Str     :$select,          #= XPath of twigs to include (relative to root)
          TagName :$omit,            #= Tags to omit from output
-         TagName :$root-tag = $select ?? 'DocumentFragment' !! Str,        #= Outer root tag name
+         TagName :$root-tag = $select ?? 'DocumentFragment' !! Str,  #= Outer root tag name
         ) {
 
     my PDF::IO $input .= coerce(
@@ -78,7 +78,7 @@ Options:
    --/fields         disable field values
    --marks           descend into marked content
    --debug           add debugging to output
-   --valid           add external DtD declaration
+   --/valid          remove external DtD declaration
    --/atts           omit attributes in tags
    --/strict         suppress warnings
    --quiet           avoid printing messages
