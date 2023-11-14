@@ -13,11 +13,14 @@ has PDF::Content::FontObj $!font-obj;
 has $.current-font;
 has Numeric $.font-size = 10;
 has PDF::Content::Tag $.mark;
+has Bool $.artifacts;
 has Int $!artifact;
 has Int $!reversed-chars;
 has Numeric $!ty;
 has Lock:D $.lock .= new;
 has Bool $.quiet;
+
+method filtered { $!artifact && !$!artifacts }
 
 method current-font {
     $!font-obj //= $!lock.protect: {
@@ -93,14 +96,14 @@ method !save-text($text is copy) {
 }
 method !set-ty { $!ty = .[5] / .[3] given $*gfx.TextMatrix; }
 method ShowText($_) {
-    unless $!artifact {
+    unless $.filtered {
         self!set-ty;
         my $text = $.current-font.decode($_, :str);
         self!save-text: $text;
     }
 }
 method ShowSpaceText(List $_) {
-    unless $!artifact {
+    unless $.filtered {
         self!set-ty;
         my Str $last := ' ';
         my @chunks = .map: {
@@ -119,14 +122,14 @@ method ShowSpaceText(List $_) {
 }
 method TextNextLine(|) is also<TextMoveSet MoveShowText MoveSetShowText> {
     # treat these as explict newlines
-    unless $!artifact {
+    unless $.filtered {
         self!save-text: "\n";
     }
 }
 method TextMove($x, $y) {
     # treat a significant vertical shift from the
     # last text positioning as an explict newline
-    unless $!artifact {
+    unless $.filtered {
         my $old-ty = $!ty;
         my $new-ty = self!set-ty;
         with $old-ty {
@@ -138,6 +141,6 @@ method TextMove($x, $y) {
 }
 method Do($key) {
     warn "todo Do $key"
-        unless $!artifact;
+        unless $.filtered;
 }
 

@@ -14,6 +14,7 @@ use PDF::Class;
 has Bool $.strict = True;
 has Bool $.quiet;
 has Bool $.marks;
+has Bool $.artifacts;
 has Lock:D $.lock .= new;
 
 method read(PDF::Class:D :$pdf!, Bool :$create, |c --> PDF::Tags:D) {
@@ -43,7 +44,7 @@ sub build-tag-index(%tags, PDF::Content::Tag $tag) {
 method canvas-tags($canvas --> Hash) {
     %!canvas-tags{$canvas} //= do {
         $*ERR.print: '.' unless $!quiet;
-        my &callback = TextDecoder.new(:$!lock, :$!quiet).callback;
+        my &callback = TextDecoder.new(:$!lock, :$!quiet, :$!artifacts).callback;
         my PDF::Content $gfx = $canvas.gfx: :&callback, :$!strict;
         $canvas.render;
         my PDF::Content::Tag %tags;

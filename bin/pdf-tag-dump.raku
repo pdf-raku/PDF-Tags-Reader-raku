@@ -18,6 +18,7 @@ sub MAIN(Str $infile,               #= Input PDF
          Bool    :$roles,           #= Apply role-map
          Bool    :$debug,           #= write extra debugging information
          Bool    :$marks,           #= Descend into marked content
+         Bool    :$artifacts,       #= Descend into artifacts
          Bool    :$fields = True,   #= Include referenced field data
          Bool    :$strict = True,   #= Warn about unknown tags, etc
          Bool    :$quiet,           #= avoid printing any messages to stderr
@@ -37,8 +38,8 @@ sub MAIN(Str $infile,               #= Input PDF
     my %o = :$dtd with $dtd;
 
     my PDF::Class $pdf .= open( $input, :$password );
-    my PDF::Tags::Reader $dom .= read: :$pdf, :$strict, :$marks, :$quiet;
-    my PDF::Tags::XML-Writer $xml .= new: :$max-depth, :$atts, :$debug, :$omit, :$style, :$marks, :$valid, :$roles, |%o;
+    my PDF::Tags::Reader $dom .= read: :$pdf, :$strict, :$marks, :$quiet, :$artifacts;
+    my PDF::Tags::XML-Writer $xml .= new: :$max-depth, :$atts, :$debug, :$omit, :$style, :$marks, :$valid, :$roles, :$artifacts, |%o;
 
     my PDF::Tags::Node @nodes = do with $select {
         $dom.find($_);
@@ -77,6 +78,7 @@ Options:
    --roles           apply role-map
    --/fields         disable field values
    --marks           descend into marked content
+   --artifacts       descend into artifacts
    --debug           add debugging to output
    --/valid          remove external DtD declaration
    --/atts           omit attributes in tags
@@ -100,13 +102,6 @@ used to check this:
 
 This script requires the freetype6 native library and the PDF::Font::Loader
 Raku module to be installed on your system.
-
-=head1 BUGS AND LIMITATIONS
-
-=item Error - `tagged PDF has multiple top-level tags; no :root-tag given`
-
-This error occur on PDF files that do not contain multple top level tags and does not result in a well-formed XML document. It can be corrected by using the `--root-tag` option to define a top-level tag, or using `--select` to trim
-the tree, for example `--select=Document[1]`.
 
 =head1 TODO
 
