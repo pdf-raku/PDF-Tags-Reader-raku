@@ -13,7 +13,6 @@ use PDF::Class;
 
 has Bool $.strict = True;
 has Bool $.quiet;
-has Bool $.marks;
 has Bool $.artifacts;
 has Lock:D $.lock .= new;
 
@@ -77,15 +76,11 @@ This class inherits from L<PDF::Tags|https://pdf-raku.github.io/PDF-Tags-raku/> 
 
  =head3 method read
 
-   method read(PDF::Class :$pdf!, Bool :$create, Bool :$marks) returns PDF::Tags
+   method read(PDF::Class :$pdf!, Bool :$create) returns PDF::Tags
 
 Read tagged PDF structure from an existing file that has been previously tagged.
 
 The `:create` option creates a new struct-tree root, if one does not already exist.
-
-The `:marks` option causes PDF::Tag::Reader to descend into content and build a more
-detailed structure that includes the actual marks in the content stream as L<PDF::Tags::Mark>
-objects. Otherwise just the content text is inserted as a child of type `Str`.
 
 =head3 method canvas-tags
 

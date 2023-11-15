@@ -25,7 +25,7 @@ endobj
 endobj
 
 4 0 obj
-<< /Length 337 >> stream
+<< /Length 447 >> stream
 q
   /P << /MCID 0 >> BDC
     BT
@@ -45,6 +45,13 @@ q
       EMC
     ET
   EMC
+  /Artifact << /MCID 1 >> BDC
+    BT
+      1 0 0 1 585 10 Tm
+      [ 3600 (Page 1) ] TJ
+      T*
+    ET
+  EMC
 Q
 endstream
 endobj
@@ -62,31 +69,36 @@ endobj
 <<
   /Type /StructTreeRoot
   /K [ 7 0 R ]
-  /ParentTree << /Nums [ 0 [ 8 0 R ] ] >>
+  /ParentTree << /Nums [ 0 [ 8 0 R 9 0 R ] ] >>
 >>
 endobj
 
 7 0 obj
-<< /Type /StructElem /S /Document /K [ 8 0 R ] /P 6 0 R >>
+<< /Type /StructElem /S /Document /K [ 8 0 R 9 0 R ] /P 6 0 R >>
 endobj
 
 8 0 obj
 << /Type /StructElem /S /P /K [ 0 ] /P 7 0 R /Pg 3 0 R >>
 endobj
 
+9 0 obj
+<< /Type /StructElem /S /Artifact /K [ 1 ] /P 7 0 R /Pg 3 0 R >>
+endobj
+
 xref
-0 9
+0 10
 0000000000 65535 f 
 0000000015 00000 n 
 0000000124 00000 n 
 0000000184 00000 n 
 0000000342 00000 n 
-0000000731 00000 n 
-0000000835 00000 n 
-0000000938 00000 n 
-0000001013 00000 n 
+0000000841 00000 n 
+0000000945 00000 n 
+0000001054 00000 n 
+0000001135 00000 n 
+0000001209 00000 n 
 trailer
-<< /ID [ (t/07artifacts.t ) (t/07artifacts.t ) ] /Root 1 0 R /Size 9 >>
+<< /ID [ (t/07artifacts.t ) (t/07artifacts.t ) ] /Root 1 0 R /Size 10 >>
 startxref
-1087
+1290
 %%EOF

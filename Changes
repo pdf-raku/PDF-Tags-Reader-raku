@@ -1,6 +1,8 @@
 Revision history for PDF-Tags-Reader
 
 {{$NEXT}}
+   - Remove disused :marks option
+   - Avoid some DOM processing from TextDecoder
 
 0.0.11  2023-11-10T10:07:43+13:00
    - Also rename pdf-tag-dump.raku --root-tag option to --root, as

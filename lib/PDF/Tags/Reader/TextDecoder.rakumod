@@ -12,7 +12,6 @@ has PDF::Content::Font $!font;
 has PDF::Content::FontObj $!font-obj;
 has $.current-font;
 has Numeric $.font-size = 10;
-has PDF::Content::Tag $.mark;
 has Bool $.artifacts;
 has Int $!artifact;
 has Int $!reversed-chars;
@@ -43,16 +42,12 @@ method BeginMarkedContent($,$?) is also<BeginMarkedContentDict> {
     given $*gfx.tags.open-tags.tail -> $tag {
         $!artifact++ if $tag.name eq Artifact;
         $!reversed-chars++ if $tag.name eq ReversedChars;
-        $!mark = $tag with $tag.mcid;
     }
 }
 method EndMarkedContent() {
     with $*gfx.tags.closed-tag -> $tag {
         $!artifact-- if $tag.name eq Artifact;
         $!reversed-chars-- if $tag.name eq ReversedChars;
-        with $!mark {
-            $_ = Nil if $_ === $tag;
-        }
     }
 }
 method Save()      {
@@ -79,7 +74,7 @@ method SetGraphicsState($gs) {
     }
 }
 method !save-text($text is copy) {
-    with $!mark // $*gfx.open-tags.tail -> $tag {
+    with $*gfx.open-tags.tail -> $tag {
         $text .= flip if $!reversed-chars;
         given $tag.children {
             if .tail ~~ Str:D {

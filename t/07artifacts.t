@@ -19,6 +19,7 @@ $page.graphics: -> $gfx {
             .text-position = 20, 600;
             .say: "Test para with hidden artifact";
 
+            # content-level artifact
             .tag: Artifact, {
                 .text-position = 20, 596;
                 .say: '_' x 30;
@@ -28,6 +29,11 @@ $page.graphics: -> $gfx {
                 .say: "and nested spanning text";
             }
         }
+    }
+
+    # structural artifact
+    $doc.Artifact: $gfx, {
+        .say: 'Page 1', :position[585, 10], :align<right>;
     }
 }
 
