@@ -14,6 +14,7 @@ use PDF::Class;
 has Bool $.strict = True;
 has Bool $.quiet;
 has Bool $.artifacts;
+has Bool $.marks;
 has Lock:D $.lock .= new;
 
 method read(PDF::Class:D :$pdf!, Bool :$create, |c --> PDF::Tags:D) {
@@ -40,6 +41,16 @@ sub build-tag-index(%tags, PDF::Content::Tag $tag) {
     }
 }
 
+multi sub tag-text(PDF::Content::Tag:D $tag) {
+    with $tag.attributes<ActualText> {
+        PDF::COS::TextString.COERCE: $_
+    }
+    else {
+        $tag.kids.map(&tag-text).join
+    }
+}
+multi sub tag-text(Str:D $text) { $text }
+
 method canvas-tags($canvas --> Hash) {
     %!canvas-tags{$canvas} //= do {
         $*ERR.print: '.' unless $!quiet;
@@ -48,6 +59,9 @@ method canvas-tags($canvas --> Hash) {
         $canvas.render;
         my PDF::Content::Tag %tags;
         build-tag-index(%tags, $_) for $gfx.tags.children;
+        unless $!marks {
+            .tags = tag-text($_) for %tags.values;
+        }
         %tags;
     }
 }
