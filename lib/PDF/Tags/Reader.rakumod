@@ -31,7 +31,7 @@ method read(PDF::Class:D :$pdf!, Bool :$create, |c --> PDF::Tags:D) {
 constant Tags = Hash[PDF::Content::Tag];
 has Tags %!canvas-tags{PDF::Content::Canvas};
 
-sub build-tag-index(%tags, PDF::Content::Tag $tag) {
+multi sub build-tag-index(%tags, PDF::Content::Tag $tag) {
     with $tag.mcid {
         %tags{$_} = $tag;
     }
@@ -41,6 +41,8 @@ sub build-tag-index(%tags, PDF::Content::Tag $tag) {
     }
 }
 
+multi sub build-tag-index(%, Str) { }
+
 multi sub tag-text(PDF::Content::Tag:D $tag) {
     with $tag.attributes<ActualText> {
         PDF::COS::TextString.COERCE: $_
@@ -49,6 +51,7 @@ multi sub tag-text(PDF::Content::Tag:D $tag) {
         $tag.kids.map(&tag-text).join
     }
 }
+
 multi sub tag-text(Str:D $text) { $text }
 
 method canvas-tags($canvas --> Hash) {
