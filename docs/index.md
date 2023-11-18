@@ -40,7 +40,7 @@ Scripts in this Distribution
 
 ### `pdf-tag-dump.raku`
 
-    pdf-tag-dump.raku --select=<xpath-expr> --omit=tag --password=Xxxx --max-depth=n --marks --artifacts --/atts --/style --debug t/pdf/tagged.pdf
+    pdf-tag-dump.raku --select=<xpath-expr> --omit=tag --password=Xxxx --max-depth=n --marks --/atts --/style --debug t/pdf/tagged.pdf
 
 Options:
 
@@ -53,8 +53,6 @@ Options:
   * `--debug` - write extra debugging information to XML
 
   * `--marks` - descend into marked content
-
-  * `--artifacts` - include artifact structure and content
 
   * `--strict` - warn about unknown tags, etc
 

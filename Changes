@@ -2,6 +2,9 @@ Revision history for PDF-Tags-Reader
 
 {{$NEXT}}
 
+0.0.13  2023-11-19T06:48:54+13:00
+   - Fix handling of text nodes in page tag index
+
 0.0.12  2023-11-17T07:26:35+13:00
    - Fix :!marks processing to not leave empty child tags.
      The processing of this option has been moved from
