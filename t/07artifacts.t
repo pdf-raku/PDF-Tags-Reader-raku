@@ -1,5 +1,5 @@
 use Test;
-plan 2;
+plan 3;
 
 use PDF::Class;
 use PDF::Tags;
@@ -45,6 +45,18 @@ my $xml = q{<Document>
 </Document>
 };
 
+my $xml2 = q{<Document>
+  <P>
+    Test para with hidden artifact
+    ______________________________
+    and nested spanning text
+  </P>
+  <Artifact>
+    Page 1
+  </Artifact>
+</Document>
+};
+
 skip "PDF::Content v0.5.17+ needed for accurate pre-save XML" 
     unless PDF::Content.^ver >= v0.5.17;
 is $tags[0].xml, $xml, 'XML, pre-saved';
@@ -56,5 +68,10 @@ $pdf .= open: "t/07artifacts.pdf";
 $tags = PDF::Tags::Reader.read: :$pdf, :quiet;
 
 is $tags[0].xml, $xml, 'XML, round-tripped';
+
+$pdf .= open: "t/07artifacts.pdf";
+$tags = PDF::Tags::Reader.read: :$pdf, :quiet, :artifacts;
+
+is $tags[0].xml(:artifacts), $xml2, 'XML, round-tripped, with artifacts';
 
 done-testing;
