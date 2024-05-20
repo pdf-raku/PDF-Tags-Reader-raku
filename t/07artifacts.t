@@ -57,8 +57,6 @@ my $xml2 = q{<Document>
 </Document>
 };
 
-skip "PDF::Content v0.5.17+ needed for accurate pre-save XML" 
-    unless PDF::Content.^ver >= v0.5.17;
 is $tags[0].xml, $xml, 'XML, pre-saved';
 
 $pdf.id =  $*PROGRAM-NAME.fmt('%-16.16s');

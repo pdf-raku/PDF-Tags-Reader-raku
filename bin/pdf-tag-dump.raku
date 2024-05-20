@@ -28,7 +28,7 @@ sub MAIN(Str $infile,               #= Input PDF
          Str     :$select,          #= XPath of twigs to include (relative to root)
          TagName :$omit,            #= Tags to omit from output
          TagName :$root = $select ?? 'DocumentFragment' !! Str,  #= Outer root tag name
-        ) {
+        ) is hidden-from-backtrace {
 
     my PDF::IO $input .= coerce(
        $infile eq '-'
@@ -103,8 +103,5 @@ used to check this:
 This script requires the freetype6 native library and the PDF::Font::Loader
 Raku module to be installed on your system.
 
-=head1 TODO
-
-=item processing of links
 
 =end pod

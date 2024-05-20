@@ -10,6 +10,7 @@ use PDF::Content::Canvas;
 use PDF::Content;
 use PDF::Content::Ops :GraphicsContext;
 use PDF::Class;
+use PDF::StructTreeRoot;
 
 has Bool $.strict = True;
 has Bool $.quiet;
@@ -18,7 +19,7 @@ has Bool $.marks;
 has Lock:D $.lock .= new;
 
 method read(PDF::Class:D :$pdf!, Bool :$create, |c --> PDF::Tags:D) {
-    with $pdf.catalog.StructTreeRoot -> $cos {
+    with $pdf.catalog.StructTreeRoot -> PDF::StructTreeRoot $cos {
         self.new: :$cos, :root(self.WHAT), :$pdf, |c;
     }
     else {
