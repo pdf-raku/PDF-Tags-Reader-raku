@@ -30,11 +30,13 @@ jobs:
         run: |
           sudo apt-get install -y libfontconfig-dev
           sudo apt-get install -y libharfbuzz-dev
+          sudo apt-get install -y libfreetype6-dev
       - name: Install Libraries (MacOS)
         if: matrix.os == 'macOS-latest'
         run: |
           brew install openssl
           brew install harfbuzz
+          brew reinstall freetype
       - name: Install Dependencies
         run: |
           # install and test if need be (includes [test-depends])
