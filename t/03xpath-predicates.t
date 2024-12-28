@@ -6,7 +6,7 @@ use PDF::Class;
 plan 9;
 
 sub names(@elems) {
-    [@elems>>.name];
+    @elems>>.name.Array;
 }
 
 my PDF::Class $pdf .= open("t/pdf/tagged.pdf");

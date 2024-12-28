@@ -3,19 +3,18 @@ unit class PDF::Tags::Reader:ver<0.0.13>;
 use PDF::Tags;
 also is PDF::Tags;
 
-use PDF::Tags::Reader::TextDecoder;
-constant TextDecoder = PDF::Tags::Reader::TextDecoder;
-
 use PDF::Content::Canvas;
 use PDF::Content;
 use PDF::Content::Ops :GraphicsContext;
 use PDF::Class;
 use PDF::StructTreeRoot;
+use PDF::Tags::Reader::TextDecoder;
 
 has Bool $.strict = True;
 has Bool $.quiet;
 has Bool $.artifacts;
 has Bool $.marks;
+has $.decoder = PDF::Tags::Reader::TextDecoder;
 has Lock:D $.lock .= new;
 
 method read(PDF::Class:D :$pdf!, Bool :$create, |c --> PDF::Tags:D) {
@@ -58,7 +57,7 @@ multi sub tag-text(Str:D $text) { $text }
 method canvas-tags($canvas --> Hash) {
     %!canvas-tags{$canvas} //= do {
         $*ERR.print: '.' unless $!quiet;
-        my &callback = TextDecoder.new(:$!lock, :$!quiet, :$!artifacts).callback;
+        my &callback = $!decoder.new(:$!lock, :$!quiet, :$!artifacts).callback;
         my PDF::Content $gfx = $canvas.gfx: :&callback, :$!strict;
         $canvas.render;
         my PDF::Content::Tag %tags;

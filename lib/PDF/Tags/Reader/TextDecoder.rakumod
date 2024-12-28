@@ -73,17 +73,11 @@ method SetGraphicsState($gs) {
         $!font-size = $*gfx.font-size;
     }
 }
+
 method !save-text($text is copy) {
+    $text .= flip if $!reversed-chars;
     with $*gfx.open-tags.tail -> $tag {
-        $text .= flip if $!reversed-chars;
-        given $tag.children {
-            if .tail ~~ Str:D {
-                .tail ~= $text;
-            }
-            else {
-                $tag.children.push: $text;
-            }
-        }
+        $tag.children.push: $text;
     }
     else {
         note "untagged text: {$text}";
@@ -105,7 +99,7 @@ method ShowSpaceText(List $_) {
             when Str {
                 $last := $.current-font.decode($_, :str);
             }
-            when $_ <= -120 && !($last ~~ /\s$/) {
+            when $_ <= -120 && $last !~~ /\s$/ {
                 # assume implicit space
                 ' '
             }
