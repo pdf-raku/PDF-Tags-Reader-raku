@@ -2,8 +2,6 @@
 use v6;
 
 use PDF::Class;
-use PDF::Catalog;
-use PDF::StructTreeRoot;
 use PDF::Tags::Reader;
 use PDF::Tags::XML-Writer;
 use PDF::Tags::Node :TagName;
