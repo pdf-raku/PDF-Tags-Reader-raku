@@ -43,7 +43,7 @@ my $xml = q{<Document>
 
 is $tags[0].xml, $xml, 'XML, pre-saved';
 
-$pdf.id =  $*PROGRAM-NAME.fmt('%-16.16s');
+$pdf.id =  $*PROGRAM.basename.fmt('%-16.16s');
 $pdf.save-as: "t/11-lang.pdf", :!info;
 
 $pdf .= open: "t/11-lang.pdf";

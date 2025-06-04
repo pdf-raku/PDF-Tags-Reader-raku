@@ -41,7 +41,7 @@ skip "PDF::Content v0.5.17+ needed for accurate pre-save XML"
     unless PDF::Content.^ver >= v0.5.17;
 is $tags[0].xml, $xml, 'XML, pre-saved';
 
-$pdf.id =  $*PROGRAM-NAME.fmt('%-16.16s');
+$pdf.id =  $*PROGRAM.basename.fmt('%-16.16s');
 $pdf.save-as: "t/10-reversed-chars.pdf", :!info;
 
 $pdf .= open: "t/10-reversed-chars.pdf";

@@ -31,7 +31,7 @@ with $dom.first('Document/L[1]') {
      is .attributes<User:Baz>, 42;
 }
 
-$pdf.id =  $*PROGRAM-NAME.fmt('%-16.16s');
+$pdf.id =  $*PROGRAM.basename.fmt('%-16.16s');
 $pdf.save-as: "t/09edit.pdf", :!info;
 
 $pdf .= open: "t/09edit.pdf";
