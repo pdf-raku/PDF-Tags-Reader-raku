@@ -83,7 +83,7 @@ method !save-text($text is copy) {
         note "untagged text: {$text}";
     }
 }
-method !set-ty { $!ty = .[5] / .[3] given $*gfx.TextMatrix; }
+method !set-ty { $!ty = .[5] / (.[3]||1) given $*gfx.TextMatrix; }
 method ShowText($_) {
     unless $.filtered {
         self!set-ty;

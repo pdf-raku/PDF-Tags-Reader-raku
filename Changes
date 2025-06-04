@@ -1,6 +1,7 @@
 Revision history for PDF-Tags-Reader
 
 {{$NEXT}}
+   - Fix potential divide by zero, when setting text flow position.
 
 0.0.13  2023-11-19T06:48:54+13:00
    - Fix handling of text nodes in page tag index
