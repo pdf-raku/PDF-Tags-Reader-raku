@@ -22,9 +22,9 @@ sub MAIN(Str $infile,               #= Input PDF
          Bool    :$quiet,           #= avoid printing any messages to stderr
          Bool    :$style = True,    #= Include stylesheet header
          Str     :$dtd,             #= Extern DtD to use
-         Bool    :$valid = !$marks && !$roles, #= include external DtD declaration
+         Bool    :$valid = !$roles, #= include external DtD declaration
          Str     :$select,          #= XPath of twigs to include (relative to root)
-         TagName :$omit,            #= Tags to omit from output
+         TagName :$omit,            #= Tag to omit from output
          TagName :$root = $select ?? 'DocumentFragment' !! Str,  #= Outer root tag name
         ) is hidden-from-backtrace {
 
@@ -33,17 +33,18 @@ sub MAIN(Str $infile,               #= Input PDF
            ?? $*IN.slurp-rest( :bin ) # sequential access
            !! $infile.IO              # random access
     );
-    my %o = :$dtd with $dtd;
 
     my PDF::Class $pdf .= open( $input, :$password );
     my PDF::Tags::Reader $dom .= read: :$pdf, :$strict, :$marks, :$quiet, :$artifacts;
+    my %o = :$dtd with $dtd;
+    %o<root> = $_ with $dom.root;
     my PDF::Tags::XML-Writer $xml .= new: :$max-depth, :$atts, :$debug, :$omit, :$style, :$marks, :$valid, :$roles, :$artifacts, |%o;
 
     my PDF::Tags::Node @nodes = do with $select {
         $dom.find($_);
     }
     else {
-        $dom.root;
+        %o<root> // [];
     }
 
     my UInt $depth = 0;
