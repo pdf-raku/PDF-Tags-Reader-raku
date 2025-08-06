@@ -38,7 +38,7 @@ method callback {
             if self.can($method);
     }
 }
-method BeginMarkedContent($,$?) is also<BeginMarkedContentDict> {
+method ($,$?) is also<BeginMarkedContent BeginMarkedContentDict> {
     given $*gfx.tags.open-tags.tail -> $tag {
         $!artifact++ if $tag.name eq Artifact;
         $!reversed-chars++ if $tag.name eq ReversedChars;
@@ -109,7 +109,7 @@ method ShowSpaceText(List $_) {
         self!save-text: @chunks.join;
     }
 }
-method TextNextLine(|) is also<TextMoveSet MoveShowText MoveSetShowText> {
+method (*@) is also<TextNextLine TextMoveSet MoveShowText MoveSetShowText> {
     # treat these as explict newlines
     unless $.filtered {
         self!save-text: "\n";
