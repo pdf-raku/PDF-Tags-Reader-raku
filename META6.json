@@ -21,7 +21,7 @@
   },
   "resources": [
   ],
-  "source-url": "git://github.com/pdf-raku/PDF-Tags-Reader-raku.git",
+  "source-url": "https://github.com/pdf-raku/PDF-Tags-Reader-raku.git",
   "tags": [
     "pdf",
     "accessibility",
@@ -29,5 +29,5 @@
   ],
   "test-depends": [
   ],
-  "version": "0.0.13"
+  "version": "0.0.14"
 }

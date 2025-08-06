@@ -1,6 +1,8 @@
 Revision history for PDF-Tags-Reader
 
 {{$NEXT}}
+
+0.0.14  2025-08-07T09:02:51+12:00
    - Fix potential divide by zero, when setting text flow position.
    - Don't consolidate check chunks in TextDecoder
 
