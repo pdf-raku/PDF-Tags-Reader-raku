@@ -2,6 +2,10 @@ Revision history for PDF-Tags-Reader
 
 {{$NEXT}}
 
+0.0.15  2025-08-22T10:55:54+12:00
+   - Add --xsl option to pdf-tag-dump. This is a new feature in the
+     PDF::Tags 0.2.3 base module.
+
 0.0.14  2025-08-07T09:02:51+12:00
    - Fix potential divide by zero, when setting text flow position.
    - Don't consolidate check chunks in TextDecoder
