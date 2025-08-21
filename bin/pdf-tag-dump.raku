@@ -1,6 +1,3 @@
-#!/usr/bin/env perl6
-use v6;
-
 use PDF::Class;
 use PDF::Tags::Reader;
 use PDF::Tags::XML-Writer;
@@ -14,15 +11,17 @@ sub MAIN(Str $infile,               #= Input PDF
          Number  :$max-depth = 16,  #= Depth to ascend/descend struct tree
          Bool    :$atts = True,     #= Include attributes in tags
          Bool    :$roles,           #= Apply role-map
-         Bool    :$debug,           #= write extra debugging information
+         Bool    :$debug,           #= Write extra debugging information
+         Bool    :$quiet,           #= Avoid printing any messages to stderr
          Bool    :$marks,           #= Descend into marked content
          Bool    :$artifacts,       #= Descend into artifacts
          Bool    :$fields = True,   #= Include referenced field data
          Bool    :$strict = True,   #= Warn about unknown tags, etc
-         Bool    :$quiet,           #= avoid printing any messages to stderr
-         Bool    :$style = True,    #= Include stylesheet header
-         Str     :$dtd,             #= Extern DtD to use
-         Bool    :$valid = !$roles, #= include external DtD declaration
+         Str     :$xsl,             #= External XSL (stage1) stylesheet to use
+         Str     :$css,             #= External CSS (stage2) stylesheet to use
+         Bool    :$style = True,    #= Include stylesheet declarations
+         Str     :$dtd,             #= External DtD to use
+         Bool    :$valid = !$roles, #= Include external DtD declaration
          Str     :$select,          #= XPath of twigs to include (relative to root)
          TagName :$omit,            #= Tag to omit from output
          TagName :$root = $select ?? 'DocumentFragment' !! Str,  #= Outer root tag name
@@ -36,8 +35,11 @@ sub MAIN(Str $infile,               #= Input PDF
 
     my PDF::Class $pdf .= open( $input, :$password );
     my PDF::Tags::Reader $dom .= read: :$pdf, :$strict, :$marks, :$quiet, :$artifacts;
-    my %o = :$dtd with $dtd;
-    %o<root> = $_ with $dom.root;
+    my %o;
+    %o<dtd>        = $_ with $dtd;
+    %o<root>       = $_ with $dom.root;
+    %o<xsl>        = $_ with $xsl;
+    %o<css>        = $_ with $css;
     my PDF::Tags::XML-Writer $xml .= new: :$max-depth, :$atts, :$debug, :$omit, :$style, :$marks, :$valid, :$roles, :$artifacts, |%o;
 
     my PDF::Tags::Node @nodes = do with $select {
@@ -79,11 +81,14 @@ Options:
    --marks           descend into marked content
    --artifacts       descend into artifacts
    --debug           add debugging to output
-   --/valid          remove external DtD declaration
    --/atts           omit attributes in tags
    --/strict         suppress warnings
    --quiet           avoid printing messages
-   --/style          omit root stylesheet link
+   --dtd=link        External DtD to use
+   --/valid          omit external DtD declaration
+   --xsl=link        xsl (stage1) stylesheet to use
+   --css=link        css (stage2) stylesheet to use
+   --/style          omit stylesheet declarations
 
 =head1 DESCRIPTION
 
