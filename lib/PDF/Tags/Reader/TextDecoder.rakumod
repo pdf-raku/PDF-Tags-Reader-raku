@@ -110,14 +110,14 @@ method ShowSpaceText(List $_) {
     }
 }
 method (*@) is also<TextNextLine TextMoveSet MoveShowText MoveSetShowText> {
-    # treat these as explict newlines
+    # treat these as implict newlines
     unless $.filtered {
         self!save-text: "\n";
     }
 }
 method TextMove($x, $y) {
     # treat a significant vertical shift from the
-    # last text positioning as an explict newline
+    # last text positioning as an implict newline
     unless $.filtered {
         my $old-ty = $!ty;
         my $new-ty = self!set-ty;

@@ -13,9 +13,8 @@ is-deeply $dom.root[0].xml.lines.head(3), (
     '  <L ListNumbering="Disc">',
     '    <LI>');
 
-is-deeply $dom.root.xml(:root-tag<Docs>, :!valid).lines.head(6), (
+is-deeply $dom.root.xml(:root-tag<Docs>, :!valid, :!style).lines.head(5), (
     '<?xml version="1.0" encoding="UTF-8"?>',
-    PDF::Tags::XML-Writer.new.css,
     '<Docs>',
     '  <Document>',
     '    <L ListNumbering="Disc">',
