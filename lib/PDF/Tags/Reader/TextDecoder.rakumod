@@ -5,6 +5,7 @@ use PDF::Font::Loader::Dict;
 use PDF::Content::Ops :OpCode;
 use PDF::Content::FontObj;
 use PDF::Content::Tag :ContentTags;
+use PDF::Destination;
 use Method::Also;
 
 has Hash @!save;
@@ -18,6 +19,8 @@ has Int $!reversed-chars;
 has Numeric $!ty;
 has Lock:D $.lock .= new;
 has Bool $.quiet;
+has PDF::Destination %.dests;
+has PDF::Content::Tag $!mark;
 
 method filtered { $!artifact && !$!artifacts }
 
@@ -40,12 +43,14 @@ method callback {
 }
 method ($,$?) is also<BeginMarkedContent BeginMarkedContentDict> {
     given $*gfx.tags.open-tags.tail -> $tag {
+        $!mark = $tag if $tag.mcid.defined;
         $!artifact++ if $tag.name eq Artifact;
         $!reversed-chars++ if $tag.name eq ReversedChars;
     }
 }
 method EndMarkedContent() {
     with $*gfx.tags.closed-tag -> $tag {
+        $!mark = Nil if $tag.mcid.defined;
         $!artifact-- if $tag.name eq Artifact;
         $!reversed-chars-- if $tag.name eq ReversedChars;
     }
@@ -74,6 +79,7 @@ method SetGraphicsState($gs) {
     }
 }
 
+
 method !save-text($text is copy) {
     $text .= flip if $!reversed-chars;
     with $*gfx.open-tags.tail -> $tag {
@@ -83,7 +89,31 @@ method !save-text($text is copy) {
         note "untagged text: {$text}";
     }
 }
-method !set-ty { $!ty = .[5] / (.[3]||1) given $*gfx.TextMatrix; }
+
+sub match-dest(PDF::Destination $dest, :$base-y! is rw, PDF::Content:D :$gfx!) {
+    if $dest.can('top') {
+        $base-y //= $gfx.base-coords(0, 0, :text)[1];
+        $base-y <= ($dest.top // Inf);
+    }
+    else {
+        True;
+    }
+}
+
+method !set-ty {
+    if %!dests && $!mark && !$!mark.dest-name {
+        # use this as a trigger to resolve any named destinations
+        # which have come into visual range
+        my Numeric $base-y;
+        with %!dests.sort.first({.value.&match-dest(:$base-y, :$*gfx)}) {
+            %!dests{.key}:delete;
+            $!mark.dest-name = .key;
+        }
+    }
+
+    $!ty = .[5] / (.[3]||1) given $*gfx.TextMatrix;
+
+}
 method ShowText($_) {
     unless $.filtered {
         self!set-ty;

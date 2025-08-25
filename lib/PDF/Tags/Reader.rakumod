@@ -9,13 +9,35 @@ use PDF::Content::Ops :GraphicsContext;
 use PDF::Class;
 use PDF::StructTreeRoot;
 use PDF::Tags::Reader::TextDecoder;
+use PDF::Destination;
 
 has Bool $.strict = True;
 has Bool $.quiet;
 has Bool $.artifacts;
 has Bool $.marks;
+has Hash %!dests{PDF::Content::Canvas};
 has $.decoder = PDF::Tags::Reader::TextDecoder;
 has Lock:D $.lock .= new;
+
+multi destination(PDF::Destination:D $dest, :destinations($)) { $dest.is-page-ref ?? $dest !! PDF::Destination }
+multi destination(Hash:D $dd, :$destinations!) {
+    destination $dd<SD> // $dd<D>, :$destinations
+}
+multi destination(Str:D $name, :$destinations!) {
+    destination $destinations{$name}, :$destinations;
+}
+multi destination(Any:U) { PDF::Destination }
+
+submethod TWEAK(PDF::Class:D :$pdf!) {
+    given $pdf.catalog -> $catalog {
+        with $catalog.destinations -> $destinations {
+            for $destinations.keys.sort -> $name {
+                %!dests{.page}{$name} = $_
+                    with destination $name, :$destinations;
+            }
+        }
+    }
+}
 
 method read(PDF::Class:D :$pdf!, Bool :$create, |c --> PDF::Tags:D) {
     with $pdf.catalog.StructTreeRoot -> PDF::StructTreeRoot $cos {
@@ -23,8 +45,8 @@ method read(PDF::Class:D :$pdf!, Bool :$create, |c --> PDF::Tags:D) {
     }
     else {
         $create
-            ?? self.create(:$pdf, |c)
-            !! fail "PDF document does not contain marked content";
+        ?? self.create(:$pdf, |c)
+        !! fail "PDF document does not contain marked content";
     }
 }
 
@@ -54,10 +76,11 @@ multi sub tag-text(PDF::Content::Tag:D $tag) {
 
 multi sub tag-text(Str:D $text) { $text }
 
-method canvas-tags($canvas --> Hash) {
+multi method canvas-tags($canvas --> Hash) {
     %!canvas-tags{$canvas} //= do {
+        my %dests = %$_ with %!dests{$canvas};
         $*ERR.print: '.' unless $!quiet;
-        my &callback = $!decoder.new(:$!lock, :$!quiet, :$!artifacts).callback;
+        my &callback = $!decoder.new(:$!lock, :$!quiet, :$!artifacts, :%dests).callback;
         my PDF::Content $gfx = $canvas.gfx: :&callback, :$!strict;
         $canvas.render;
         my PDF::Content::Tag %tags;

@@ -1,6 +1,8 @@
 Revision history for PDF-Tags-Reader
 
 {{$NEXT}}
+   - Add support for named destinations. These are now resolved
+     and mapped to PDF::Content::Tag dest-name() by the renderer.
 
 0.0.15  2025-08-22T10:55:54+12:00
    - Add --xsl option to pdf-tag-dump. This is a new feature in the
@@ -34,7 +36,7 @@ Revision history for PDF-Tags-Reader
    - Add tests on Lang attribute; newly introduced in PDF::Tags 0.1.12
 
 0.0.8  2023-07-25T14:48:47+12:00
-   - Add -roles option to pdf-tag-dump.raku
+   - Add --roles option to pdf-tag-dump.raku
    - Add :core-font option to PDF::Font::Loader.load-font - allow loading
      of core fonts.
 
