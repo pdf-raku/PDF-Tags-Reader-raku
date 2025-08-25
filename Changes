@@ -1,6 +1,8 @@
 Revision history for PDF-Tags-Reader
 
 {{$NEXT}}
+
+0.0.16  2025-08-26T08:59:52+12:00
    - Add support for named destinations. These are now resolved
      and mapped to PDF::Content::Tag dest-name() by the renderer.
 
