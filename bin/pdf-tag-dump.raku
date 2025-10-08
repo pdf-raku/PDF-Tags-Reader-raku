@@ -6,26 +6,28 @@ use PDF::IO;
 
 subset Number of Int where * > 0;
 
-sub MAIN(Str $infile,               #= Input PDF
-	 Str     :$password = '',   #= Password for the input PDF, if encrypted
-         Number  :$max-depth = 16,  #= Depth to ascend/descend struct tree
-         Bool    :$atts = True,     #= Include attributes in tags
-         Bool    :$roles,           #= Apply role-map
-         Bool    :$debug,           #= Write extra debugging information
-         Bool    :$quiet,           #= Avoid printing any messages to stderr
-         Bool    :$marks,           #= Descend into marked content
-         Bool    :$artifacts,       #= Descend into artifacts
-         Bool    :$fields = True,   #= Include referenced field data
-         Bool    :$strict = True,   #= Warn about unknown tags, etc
-         Str     :$xsl,             #= External XSL (stage1) stylesheet to use
-         Str     :$css,             #= External CSS (stage2) stylesheet to use
-         Bool    :$style = True,    #= Include stylesheet declarations
-         Str     :$dtd,             #= External DtD to use
-         Bool    :$valid = !$roles, #= Include external DtD declaration
-         Str     :$select,          #= XPath of twigs to include (relative to root)
-         TagName :$omit,            #= Tag to omit from output
-         TagName :$root = $select ?? 'DocumentFragment' !! Str,  #= Outer root tag name
-        ) is hidden-from-backtrace {
+sub MAIN(
+    Str $infile,               #= Input PDF
+     Str     :$password = '',   #= Password for the input PDF, if encrypted
+     Number  :$max-depth = 16,  #= Depth to ascend/descend struct tree
+     Bool    :$atts = True,     #= Include attributes in tags
+     Bool    :$roles,           #= Translate role-map to tags, where possible
+     Bool    :$classes,         #= Show class-maps via 'class' attribute
+     Bool    :$debug,           #= Write extra debugging information
+     Bool    :$quiet,           #= Avoid printing any messages to stderr
+     Bool    :$marks,           #= Descend into marked content
+     Bool    :$artifacts,       #= Descend into artifacts
+     Bool    :$fields = True,   #= Include referenced field data
+     Bool    :$strict = True,   #= Warn about unknown tags, etc
+     Str     :$xsl,             #= External XSL (stage1) stylesheet to use
+     Str     :$css,             #= External CSS (stage2) stylesheet to use
+     Bool    :$style = True,    #= Include stylesheet declarations
+     Str     :$dtd,             #= External DtD to use
+     Bool    :$valid = !$roles, #= Include external DtD declaration
+     Str     :$select,          #= XPath of twigs to include (relative to root)
+     TagName :$omit,            #= Tag to omit from output
+     TagName :$root = $select ?? 'DocumentFragment' !! Str,  #= Outer root tag name
+) is hidden-from-backtrace {
 
     my PDF::IO $input .= coerce(
        $infile eq '-'
@@ -40,7 +42,7 @@ sub MAIN(Str $infile,               #= Input PDF
     %o<root>       = $_ with $dom.root;
     %o<xsl>        = $_ with $xsl;
     %o<css>        = $_ with $css;
-    my PDF::Tags::XML-Writer $xml .= new: :$max-depth, :$atts, :$debug, :$omit, :$style, :$marks, :$valid, :$roles, :$artifacts, |%o;
+    my PDF::Tags::XML-Writer $xml .= new: :$max-depth, :$atts, :$debug, :$omit, :$style, :$marks, :$valid, :$roles, :classes, :$artifacts, |%o;
 
     my PDF::Tags::Node @nodes = do with $select {
         $dom.find($_);
@@ -76,7 +78,8 @@ Options:
    --select=XPath    nodes to be included
    --omit=tag-name   nodes to be excluded
    --root=tag-name   define outer root tag
-   --roles           apply role-map
+   --roles           translate role-map to tags, where possible
+   --class           show class-maps via 'class' attribute
    --/fields         disable field values
    --marks           descend into marked content
    --artifacts       descend into artifacts
