@@ -12,7 +12,7 @@ sub MAIN(
      Number  :$max-depth = 16,  #= Depth to ascend/descend struct tree
      Bool    :$atts = True,     #= Include attributes in tags
      Bool    :$roles,           #= Translate role-map to tags, where possible
-     Bool    :$classes,         #= Show class-maps via 'class' attribute
+     Bool    :$class-names,     #= Show classes in 'class' attribute; don't map them
      Bool    :$debug,           #= Write extra debugging information
      Bool    :$quiet,           #= Avoid printing any messages to stderr
      Bool    :$marks,           #= Descend into marked content
@@ -42,7 +42,7 @@ sub MAIN(
     %o<root>       = $_ with $dom.root;
     %o<xsl>        = $_ with $xsl;
     %o<css>        = $_ with $css;
-    my PDF::Tags::XML-Writer $xml .= new: :$max-depth, :$atts, :$debug, :$omit, :$style, :$marks, :$valid, :$roles, :classes, :$artifacts, |%o;
+    my PDF::Tags::XML-Writer $xml .= new: :$max-depth, :$atts, :$debug, :$omit, :$style, :$marks, :$valid, :$roles, :$class-names, :$artifacts, |%o;
 
     my PDF::Tags::Node @nodes = do with $select {
         $dom.find($_);
@@ -79,7 +79,7 @@ Options:
    --omit=tag-name   nodes to be excluded
    --root=tag-name   define outer root tag
    --roles           translate role-map to tags, where possible
-   --class           show class-maps via 'class' attribute
+   --class-names     show classes in 'class' attribute; don't map them
    --/fields         disable field values
    --marks           descend into marked content
    --artifacts       descend into artifacts
