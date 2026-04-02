@@ -35,7 +35,7 @@ method current-font {
 }
 
 method callback {
-    sub ($op, *@args) {
+    -> $op, *@args {
         my $method = OpCode($op).key;
         self."$method"(|@args)
             if self.can($method);
@@ -105,15 +105,15 @@ method !set-ty {
         # use this as a trigger to resolve any named destinations
         # which have come into visual range
         my Numeric $base-y;
-        with %!dests.sort.first({.value.&match-dest(:$base-y, :$*gfx)}) {
+        with %!dests.sort.first: *.value.&match-dest(:$base-y, :$*gfx) {
             %!dests{.key}:delete;
             $!mark.dest-name = .key;
         }
     }
 
     $!ty = .[5] / (.[3]||1) given $*gfx.TextMatrix;
-
 }
+
 method ShowText($_) {
     unless $.filtered {
         self!set-ty;
@@ -158,8 +158,5 @@ method TextMove($x, $y) {
         }
     }
 }
-method Do($key) {
-    warn "todo Do $key"
-        unless $.filtered;
-}
+
 

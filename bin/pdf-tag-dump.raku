@@ -12,7 +12,7 @@ sub MAIN(
      Number  :$max-depth = 16,  #= Depth to ascend/descend struct tree
      Bool    :$atts = True,     #= Include attributes in tags
      Bool    :$roles,           #= Translate role-map to tags, where possible
-     Bool    :$class-names,     #= Show classes in 'class' attribute; don't map them
+     Bool    :$class-names,     #= Set 'class' attribute; don't expand classes
      Bool    :$debug,           #= Write extra debugging information
      Bool    :$quiet,           #= Avoid printing any messages to stderr
      Bool    :$marks,           #= Descend into marked content
@@ -79,7 +79,7 @@ Options:
    --omit=tag-name   nodes to be excluded
    --root=tag-name   define outer root tag
    --roles           translate role-map to tags, where possible
-   --class-names     show classes in 'class' attribute; don't map them
+   --class-names     set 'class' attribute, don't expand classes
    --/fields         disable field values
    --marks           descend into marked content
    --artifacts       descend into artifacts

@@ -76,7 +76,7 @@ multi sub tag-text(PDF::Content::Tag:D $tag) {
 
 multi sub tag-text(Str:D $text) { $text }
 
-multi method canvas-tags($canvas --> Hash) {
+method canvas-tags($canvas --> Hash) {
     %!canvas-tags{$canvas} //= do {
         my %dests = %$_ with %!dests{$canvas};
         $*ERR.print: '.' unless $!quiet;
