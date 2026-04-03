@@ -30,6 +30,10 @@ multi destination(Any:U) { PDF::Destination }
 
 submethod TWEAK(PDF::Class:D :$pdf!) {
     given $pdf.catalog -> $catalog {
+        with $catalog.Lang -> $lang {
+            .Lang //= $lang
+                for self.kids;
+        }
         with $catalog.destinations -> $destinations {
             for $destinations.keys.sort -> $name {
                 %!dests{.page}{$name} = $_
