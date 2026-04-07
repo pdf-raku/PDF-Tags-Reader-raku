@@ -15,7 +15,6 @@ has Bool $.strict = True;
 has Bool $.quiet;
 has Bool $.artifacts;
 has Bool $.marks;
-has Any:D %.info is built;
 has Hash %!dests{PDF::Content::Canvas};
 has $.decoder = PDF::Tags::Reader::TextDecoder;
 has Lock:D $.lock .= new;
@@ -31,7 +30,7 @@ multi destination(Any:U) { PDF::Destination }
 
 submethod TWEAK(PDF::Class:D :$pdf!) {
     with $pdf.Info -> Hash $info {
-        %!info{$_} = $info{$_} for $info.keys;
+        self.info{$_} = $info{$_} for $info.keys;
     }
     given $pdf.catalog -> $catalog {
         with $catalog.Lang -> $lang {

@@ -37,13 +37,12 @@ sub MAIN(
 
     my PDF::Class $pdf .= open( $input, :$password );
     my PDF::Tags::Reader $dom .= read: :$pdf, :$strict, :$marks, :$quiet, :$artifacts;
-    my $info := $dom.info;
     my %o;
     %o<dtd>        = $_ with $dtd;
     %o<root>       = $_ with $dom.root;
     %o<xsl>        = $_ with $xsl;
     %o<css>        = $_ with $css;
-    my PDF::Tags::XML-Writer $xml .= new: :$max-depth, :$atts, :$debug, :$omit, :$style, :$marks, :$valid, :$roles, :$class-names, :$artifacts, :$info, |%o;
+    my PDF::Tags::XML-Writer $xml .= new: :$max-depth, :$atts, :$debug, :$omit, :$style, :$marks, :$valid, :$roles, :$class-names, :$artifacts, |%o;
 
     my PDF::Tags::Node @nodes = do with $select {
         $dom.find($_);
@@ -100,10 +99,10 @@ Dumps structure elements from a tagged PDF.
 
 Produces tagged output in an XML format.
 
-Only some PDF files contain tagged PDF. pdf-info.raku can be
+Only some PDF files contain tagged PDF. pdf-info can be
 used to check this:
 
-    % pdf-info.raku my-doc.pdf | grep Tagged:
+    % pdf-info my-doc.pdf | grep Tagged:
     Tagged:     yes
 
 =head1 DEPENDENCIES
