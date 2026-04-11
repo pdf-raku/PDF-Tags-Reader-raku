@@ -2,6 +2,9 @@ Revision history for PDF-Tags-Reader
 
 {{$NEXT}}
 
+0.0.18  2026-04-11T16:20:03+12:00
+   - Bump to latest PDF::Tags and update tests 
+
 0.0.17  2026-04-08T08:01:33+12:00
    - Map document Info directory to root element %info tag. Test
      that it's now included in XML serialization.
