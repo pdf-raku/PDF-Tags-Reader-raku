@@ -31,9 +31,7 @@ $page.graphics: -> $gfx {
 }
 
 my $xml = q{<Document>
-  <P>
-    Test para with desrever characters.
-  </P>
+  <P>Test para with desrever characters.</P>
 </Document>
 };
 

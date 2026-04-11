@@ -31,13 +31,8 @@ $page.graphics: -> $gfx {
 }
 
 my $xml = q{<Document>
-  <P Lang="en">
-    structure tagged english.
-  </P>
-  <P>
-    <Span Lang="en">content tagged english.
-    </Span>
-  </P>
+  <P Lang="en">structure tagged english.</P>
+  <P><Span Lang="en">content tagged english.</Span></P>
 </Document>
 };
 

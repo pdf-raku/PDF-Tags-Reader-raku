@@ -23,8 +23,6 @@ $pdf.add-page.graphics: {
 
 is-deeply $doc.xml.lines, (
 '<Document>',
-'  <P>',
-'    Clip me',
-'  </P>',
+'  <P>Clip me</P>',
 '</Document>'
 ), 'nested marked content';

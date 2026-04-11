@@ -38,22 +38,16 @@ $page.graphics: -> $gfx {
 }
 
 my $xml = q{<Document>
-  <P>
-    Test para with hidden artifact
-    and nested spanning text
-  </P>
+  <P>Test para with hidden artifact
+and nested spanning text</P>
 </Document>
 };
 
 my $xml2 = q{<Document>
-  <P>
-    Test para with hidden artifact
-    ______________________________
-    and nested spanning text
-  </P>
-  <Artifact>
-    Page 1
-  </Artifact>
+  <P>Test para with hidden artifact
+______________________________
+and nested spanning text</P>
+  <Artifact>Page 1</Artifact>
 </Document>
 };
 
