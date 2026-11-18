@@ -39,7 +39,7 @@ submethod TWEAK(PDF::Class:D :$pdf!) {
         }
         with $catalog.destinations -> $destinations {
             for $destinations.keys.sort -> $name {
-                %!dests{.page}{$name} = $_
+                %!dests{$pdf.page($_)}{$name} = $_
                     with destination $name, :$destinations;
             }
         }
