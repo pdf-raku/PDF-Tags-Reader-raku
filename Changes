@@ -2,6 +2,10 @@ Revision history for PDF-Tags-Reader
 
 {{$NEXT}}
 
+0.0.19  2026-11-19T12:02:23+13:00
+   - Bump to latest PDF::Class. Replace deprecated PDF::Destination
+     page() invocation with PDF::Class page().
+
 0.0.18  2026-04-11T16:20:03+12:00
    - Bump to latest PDF::Tags and update tests 
 
